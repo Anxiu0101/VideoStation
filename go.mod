@@ -22,7 +22,7 @@ require (
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	github.com/unknwon/com v1.0.1 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
-	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
+	golang.org/x/sys v0.0.0-20220222160653-b146bcec3beb // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
