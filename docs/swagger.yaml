@@ -1,0 +1,20 @@
+info:
+  contact: {}
+paths:
+  /user/space:
+    get:
+      parameters:
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 获取用户详细信息
+swagger: "2.0"
