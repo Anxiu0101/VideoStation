@@ -29,7 +29,8 @@ const (
 	FATAL
 )
 
-func init() {
+// Setup initialize the log instance
+func Setup() {
 	filePath := getLogFileFullPath()
 	F = openLogFile(filePath)
 
