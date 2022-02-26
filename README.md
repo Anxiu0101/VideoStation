@@ -1,14 +1,17 @@
 # VideoStation
+
 West2 Assignment 4
 
 ## Project Structure
+
+![VideoStation](README.assets/VideoStation.svg)
 
 ### 用户模块 (user)
 
 #### 用户结构体
 - username 用户名
 - password 密码
-- img 头像
+- avatars 头像
 - 个人资料
     - 性别 gender
     - 年龄 age
