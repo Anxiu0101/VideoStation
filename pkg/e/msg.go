@@ -5,7 +5,9 @@ var MsgFlags = map[int]string{
 	Error:         "fail",
 	InvalidParams: "请求参数错误",
 
-	ErrorNotExistUser:          "用户不存在",
+	ErrorNotExistUser:  "用户不存在",
+	ErrorHaveExistUser: "用户已存在",
+
 	ErrorUserCheckTokenFail:    "Token鉴权失败",
 	ErrorUserCheckTokenTimeout: "Token已超时",
 	ErrorUserToken:             "Token生成失败",

@@ -7,7 +7,8 @@ const (
 	InvalidParams = 400
 
 	// 成员错误
-	ErrorNotExistUser = 10001
+	ErrorNotExistUser  = 10001
+	ErrorHaveExistUser = 10002
 
 	// token 错误
 	ErrorUserCheckTokenFail    = 30001 //token 错误
