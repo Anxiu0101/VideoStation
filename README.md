@@ -1,7 +1,10 @@
 # VideoStation
+
 West2 Assignment 4
 
 ## Project Structure
+
+![VideoStation](README.assets/VideoStation.svg)
 
 ### 用户模块 (user)
 
