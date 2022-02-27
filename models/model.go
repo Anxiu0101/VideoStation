@@ -20,8 +20,8 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }
 
-// Read the config file and Open the database
-func init() {
+// Setup Read the config file and Open the database
+func Setup() {
 	var (
 		err                                       error
 		dbName, user, password, host, tablePrefix string
