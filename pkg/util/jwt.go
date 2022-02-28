@@ -8,28 +8,31 @@ import (
 	"VideoStation/pkg/setting"
 )
 
-var jwtSecret = []byte(setting.JwtSecret)
+var jwtSecret = []byte(setting.AppSetting.JwtSecret)
 
 type Claims struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	ID        uint   `json:"id"`
+	Username  string `json:"username"`
+	Authority int    `json:"authority"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+// GenerateToken 签发用户 Token
+func GenerateToken(id uint, username string, authority int) (string, error) {
 
 	// 设置 token 有效时间，3小时
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
+		id,
 		username,
-		password,
+		authority,
 		jwt.StandardClaims{
 			// 过期时间
 			ExpiresAt: expireTime.Unix(),
 			// 指定 token 发行人
-			Issuer: "gin-blog",
+			Issuer: "video-station",
 		},
 	}
 
