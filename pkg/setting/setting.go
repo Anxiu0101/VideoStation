@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -51,9 +52,9 @@ var cfg *ini.File
 func Setup() {
 	var err error
 
-	cfg, err = ini.Load("/config/app.ini")
+	cfg, err = ini.Load("conf/app.ini")
 	if err != nil {
-		log.Fatalf("setting.Setup, Fail to parse 'config/app.ini': %v", err)
+		log.Fatalf("setting.Setup, Fail to parse 'conf/app.ini': %v", err)
 	}
 
 	mapTo("app", AppSetting)
@@ -62,6 +63,8 @@ func Setup() {
 
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
+
+	fmt.Println(DatabaseSetting.User)
 }
 
 // mapTo map section

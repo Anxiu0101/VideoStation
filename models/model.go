@@ -22,20 +22,24 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }
 
-// Setup Read the config file and Open the database
+// Setup Read the conf file and Open the database
 func Setup() {
 	var err error
 
-	// pass config to dsn
+	// pass conf to dsn
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		setting.DatabaseSetting.User,
 		setting.DatabaseSetting.Password,
 		setting.DatabaseSetting.Host,
 		setting.DatabaseSetting.Name,
 	)
-	fmt.Print(dsn)
+	fmt.Println(dsn)
+	if dsn == ":@tcp()/?charset=utf8&parseTime=True&loc=Local" {
+		dsn = "Anxiu:7391839@tcp(127.0.0.1:3306)/videostation?charset=utf8&parseTime=True&loc=Local"
+	}
+	fmt.Println(dsn)
 
-	// open the database and buffer the config
+	// open the database and buffer the conf
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   setting.DatabaseSetting.TablePrefix, // set the prefix name of table
@@ -53,7 +57,9 @@ func Setup() {
 	mysqlDB.SetMaxOpenConns(100)          // SetMaxOpenConns 设置打开数据库连接的最大数量
 	mysqlDB.SetConnMaxLifetime(time.Hour) // SetConnMaxLifetime 设置了连接可复用的最大时间
 
-	DB.AutoMigrate(&User{})
+	// set auto migrate
+	DB.Set("gorm:table_options", "charset=utf8mb4").
+		AutoMigrate(&User{})
 }
 
 // CloseDB Close database

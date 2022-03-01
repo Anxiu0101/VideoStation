@@ -4,7 +4,7 @@ package controller
 //func ErrorResponse(err error) serializer.Response {
 //	if ve, ok := err.(validator.ValidationErrors); ok {
 //		for _, e := range ve {
-//			field := config.T(fmt.Sprintf("Field.%s", e.Field))
+//			field := conf.T(fmt.Sprintf("Field.%s", e.Field))
 //			tag := conf.T(fmt.Sprintf("Tag.Valid.%s", e.Tag))
 //			return serializer.Response{
 //				Status: 40001,
