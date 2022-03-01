@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"net/http"
 )
 
 func InitRouter() *gin.Engine {
@@ -25,6 +26,10 @@ func InitRouter() *gin.Engine {
 		userApi.GET("user/:id")
 
 	}
+
+	r.NoRoute(func(c *gin.Context) {
+		c.String(http.StatusNotFound, "404 not found")
+	})
 
 	return r
 }
