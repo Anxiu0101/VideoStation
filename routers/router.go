@@ -14,7 +14,16 @@ func InitRouter() *gin.Engine {
 
 	userApi := r.Group("/")
 	{
-		userApi.POST("/user/login", controller.UserRegister)
+		// 用户登录与用户注册
+		unLogUserApi := userApi.Group("/user")
+		{
+			unLogUserApi.POST("/register", controller.UserRegister)
+			unLogUserApi.POST("/login", controller.UserLogin)
+		}
+
+		// 用户其他操作
+		userApi.GET("user/:id")
+
 	}
 
 	return r

@@ -1,11 +1,19 @@
 package main
 
 import (
+	"VideoStation/models"
+	"VideoStation/pkg/logging"
 	"VideoStation/pkg/setting"
 	"VideoStation/routers"
 	"fmt"
 	"net/http"
 )
+
+func init() {
+	setting.Setup()
+	models.Setup()
+	logging.Setup()
+}
 
 func main() {
 	router := routers.InitRouter()

@@ -33,6 +33,7 @@ func Setup() {
 		setting.DatabaseSetting.Host,
 		setting.DatabaseSetting.Name,
 	)
+	fmt.Print(dsn)
 
 	// open the database and buffer the config
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -43,15 +44,16 @@ func Setup() {
 		Logger: logger.Default.LogMode(logger.Info), // set log mode
 	})
 
+	// some init set of database
 	mysqlDB, err := DB.DB()
 	if err != nil {
 		log.Panicln("db.DB() err: ", err)
 	}
-
-	// some init set of database
 	mysqlDB.SetMaxIdleConns(10)           // SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	mysqlDB.SetMaxOpenConns(100)          // SetMaxOpenConns 设置打开数据库连接的最大数量
 	mysqlDB.SetConnMaxLifetime(time.Hour) // SetConnMaxLifetime 设置了连接可复用的最大时间
+
+	DB.AutoMigrate(&User{})
 }
 
 // CloseDB Close database
@@ -60,7 +62,7 @@ func CloseDB() {
 	defer func(mysqlDB *sql.DB) {
 		err := mysqlDB.Close()
 		if err != nil {
-			log.Panicln("db.DB() err: ", err)
+			log.Panicln("DB.DB() err: ", err)
 		}
 	}(mysqlDB)
 }

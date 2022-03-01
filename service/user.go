@@ -1,13 +1,15 @@
 package service
 
 import (
+	"errors"
+
+	"gorm.io/gorm"
+
 	"VideoStation/models"
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/logging"
-	_ "VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
-	"gorm.io/gorm"
 )
 
 // UserService 用户服务
@@ -75,7 +77,7 @@ func (service *UserService) Login() serializer.Response {
 	//	若返回错误为 "未回应"，则返回 "用户不存在"，
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
 	if err := models.DB.Where("user_name=?", service.UserName).Find(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			logging.Info(err)
 			code = e.ErrorNotExistUser
 

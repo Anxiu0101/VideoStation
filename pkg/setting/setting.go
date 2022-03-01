@@ -45,29 +45,29 @@ type Database struct {
 
 var DatabaseSetting = &Database{}
 
+var cfg *ini.File
+
+// Setup initialize the configuration instance
 func Setup() {
-	Cfg, err := ini.Load("config/app.ini")
+	var err error
+
+	cfg, err = ini.Load("/config/app.ini")
 	if err != nil {
-		log.Fatalf("Fail to parse 'config/app.ini': %v", err)
+		log.Fatalf("setting.Setup, Fail to parse 'config/app.ini': %v", err)
 	}
 
-	err = Cfg.Section("app").MapTo(AppSetting)
-	if err != nil {
-		log.Fatalf("Cfg.MapTo AppSetting err: %v", err)
-	}
-
-	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
-
-	err = Cfg.Section("server").MapTo(ServerSetting)
-	if err != nil {
-		log.Fatalf("Cfg.MapTo ServerSetting err: %v", err)
-	}
+	mapTo("app", AppSetting)
+	mapTo("server", ServerSetting)
+	mapTo("database", DatabaseSetting)
 
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
-	ServerSetting.WriteTimeout = ServerSetting.ReadTimeout * time.Second
+	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
+}
 
-	err = Cfg.Section("database").MapTo(DatabaseSetting)
+// mapTo map section
+func mapTo(section string, v interface{}) {
+	err := cfg.Section(section).MapTo(v)
 	if err != nil {
-		log.Fatalf("Cfg.MapTo DatabaseSetting err: %v", err)
+		log.Fatalf("Cfg.MapTo %s err: %v", section, err)
 	}
 }
