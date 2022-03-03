@@ -25,8 +25,7 @@ type UserService struct {
 func (service *UserService) Register() *serializer.Response {
 	code := e.Success
 	var user models.User
-	var count int64
-	models.DB.Model(&models.User{}).Where("user_name = ?", service.UserName).Find(&user).Count(&count)
+	count := models.DB.Model(&models.User{}).Where("user_name = ?", service.UserName).Find(&user).RowsAffected
 
 	// 查询用户名是否已存在，是则下一步，否则返回 "用户已存在"
 	if count > 0 {
@@ -71,11 +70,11 @@ func (service *UserService) Register() *serializer.Response {
 // 4. 返回结果
 func (service *UserService) Login() serializer.Response {
 	code := e.Success
-	var user models.User
 
 	// 查询用户是否存在，是则下一步，
 	//	若返回错误为 "未回应"，则返回 "用户不存在"，
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
+	var user models.User
 	if err := models.DB.Where("user_name=?", service.UserName).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			logging.Info(err)
@@ -121,6 +120,49 @@ func (service *UserService) Login() serializer.Response {
 	return serializer.Response{
 		Status: code,
 		Data:   serializer.TokenData{User: serializer.BuildUser(user), Token: token},
+		Msg:    e.GetMsg(code),
+	}
+}
+
+type UserInfo struct {
+	UserName string `form:"user_name" json:"user_name"`
+	Avatars  string `form:"avatars" json:"avatars"`
+	Gender   int    `form:"gender" json:"gender"`
+	Age      int    `form:"age" json:"age"`
+	Email    string `form:"email" json:"email"`
+}
+
+// GetUserInfo 获取用户资料
+// 1. 查询用户
+// 2. 返回结果
+func (service *UserService) GetUserInfo(id int) serializer.Response {
+	code := e.Success
+
+	var user models.User
+	if err := models.DB.Where("id = ?", id).Find(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			logging.Info(err)
+			code = e.ErrorNotExistUser
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+		if err != nil {
+			logging.Info(err)
+			code = e.ErrorDatabase
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildUserInfo(user),
 		Msg:    e.GetMsg(code),
 	}
 }

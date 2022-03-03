@@ -1,7 +1,7 @@
 package logging
 
 import (
-	"VideoStation/pkg/setting"
+	"VideoStation/conf"
 	"fmt"
 	"log"
 	"os"
@@ -9,12 +9,12 @@ import (
 )
 
 func getLogFilePath() string {
-	return fmt.Sprintf("%s", setting.AppSetting.LogSavePath)
+	return fmt.Sprintf("%s", conf.AppSetting.LogSavePath)
 }
 
 func getLogFileFullPath() string {
 	prefixPath := getLogFilePath()
-	suffixPath := fmt.Sprintf("%s%s.%s", setting.AppSetting.LogSaveName, time.Now().Format(setting.AppSetting.TimeFormat), setting.AppSetting.LogFileExt)
+	suffixPath := fmt.Sprintf("%s%s.%s", conf.AppSetting.LogSaveName, time.Now().Format(conf.AppSetting.TimeFormat), conf.AppSetting.LogFileExt)
 
 	return fmt.Sprintf("%s%s", prefixPath, suffixPath)
 }
@@ -46,8 +46,8 @@ func mkDir() {
 
 func getLogFileName() string {
 	return fmt.Sprintf("%s%s%s",
-		setting.AppSetting.LogSaveName,
-		time.Now().Format(setting.AppSetting.TimeFormat),
-		setting.AppSetting.LogFileExt,
+		conf.AppSetting.LogSaveName,
+		time.Now().Format(conf.AppSetting.TimeFormat),
+		conf.AppSetting.LogFileExt,
 	)
 }

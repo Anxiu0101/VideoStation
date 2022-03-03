@@ -1,16 +1,16 @@
 package main
 
 import (
+	"VideoStation/conf"
 	"VideoStation/models"
 	"VideoStation/pkg/logging"
-	"VideoStation/pkg/setting"
 	"VideoStation/routers"
 	"fmt"
 	"net/http"
 )
 
 func init() {
-	setting.Setup()
+	conf.Setup()
 	models.Setup()
 	logging.Setup()
 }
@@ -19,10 +19,10 @@ func main() {
 	router := routers.InitRouter()
 
 	s := &http.Server{
-		Addr:           fmt.Sprintf(":%d", setting.ServerSetting.HttpPort),
+		Addr:           fmt.Sprintf(":%d", conf.ServerSetting.HttpPort),
 		Handler:        router,
-		ReadTimeout:    setting.ServerSetting.ReadTimeout,
-		WriteTimeout:   setting.ServerSetting.WriteTimeout,
+		ReadTimeout:    conf.ServerSetting.ReadTimeout,
+		WriteTimeout:   conf.ServerSetting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
 

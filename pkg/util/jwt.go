@@ -1,14 +1,13 @@
 package util
 
 import (
+	"VideoStation/conf"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-
-	"VideoStation/pkg/setting"
 )
 
-var jwtSecret = []byte(setting.AppSetting.JwtSecret)
+var jwtSecret = []byte(conf.AppSetting.JwtSecret)
 
 type Claims struct {
 	ID        uint   `json:"id"`

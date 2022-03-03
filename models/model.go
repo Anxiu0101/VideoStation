@@ -1,6 +1,7 @@
 package models
 
 import (
+	"VideoStation/conf"
 	"database/sql"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -9,8 +10,6 @@ import (
 	"gorm.io/gorm/schema"
 	"log"
 	"time"
-
-	"VideoStation/pkg/setting"
 )
 
 var DB *gorm.DB
@@ -28,10 +27,10 @@ func Setup() {
 
 	// pass conf to dsn
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		setting.DatabaseSetting.User,
-		setting.DatabaseSetting.Password,
-		setting.DatabaseSetting.Host,
-		setting.DatabaseSetting.Name,
+		conf.DatabaseSetting.User,
+		conf.DatabaseSetting.Password,
+		conf.DatabaseSetting.Host,
+		conf.DatabaseSetting.Name,
 	)
 	fmt.Println(dsn)
 	if dsn == ":@tcp()/?charset=utf8&parseTime=True&loc=Local" {
@@ -42,8 +41,8 @@ func Setup() {
 	// open the database and buffer the conf
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   setting.DatabaseSetting.TablePrefix, // set the prefix name of table
-			SingularTable: true,                                // use singular table by default
+			TablePrefix:   conf.DatabaseSetting.TablePrefix, // set the prefix name of table
+			SingularTable: true,                             // use singular table by default
 		},
 		Logger: logger.Default.LogMode(logger.Info), // set log mode
 	})

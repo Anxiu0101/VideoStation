@@ -2,6 +2,7 @@ package routers
 
 import (
 	"VideoStation/controller"
+	"VideoStation/middleware"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -23,8 +24,11 @@ func InitRouter() *gin.Engine {
 		}
 
 		// 用户其他操作
-		userApi.GET("user/:id")
-
+		loggedUserApi := userApi.Group("/")
+		loggedUserApi.Use(middleware.JWT())
+		{
+			loggedUserApi.GET("user/:id", controller.ShowUserInfo)
+		}
 	}
 
 	r.NoRoute(func(c *gin.Context) {

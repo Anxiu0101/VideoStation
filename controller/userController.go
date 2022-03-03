@@ -2,12 +2,14 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/unknwon/com"
+	"net/http"
 
-	"VideoStation/pkg/e"
 	"VideoStation/pkg/util"
 	"VideoStation/service"
 )
 
+// UserRegister
 // @Tags USER
 // @Summary 用户注册
 // @Produce json
@@ -24,11 +26,12 @@ func UserRegister(c *gin.Context) {
 		res := userRegisterService.Register()
 		c.JSON(200, res)
 	} else {
-		c.JSON(400, e.Error)
+		c.JSON(400, ErrorResponse(err))
 		util.Logger().Info(err)
 	}
 }
 
+// UserLogin
 // @Tags USER
 // @Summary 用户登录
 // @Produce json
@@ -44,7 +47,20 @@ func UserLogin(c *gin.Context) {
 		res := userLoginService.Login()
 		c.JSON(200, res)
 	} else {
-		c.JSON(400, e.Error)
+		c.JSON(400, ErrorResponse(err))
+		util.Logger().Info(err)
+	}
+}
+
+func ShowUserInfo(c *gin.Context) {
+	// 创建名为 用户信息获取服务
+	var userShowInfoService service.UserService
+	if err := c.ShouldBind(&userShowInfoService); err == nil {
+		id := com.StrTo(c.Param("id")).MustInt()
+		res := userShowInfoService.GetUserInfo(id)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
 		util.Logger().Info(err)
 	}
 }

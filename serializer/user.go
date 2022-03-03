@@ -1,6 +1,9 @@
 package serializer
 
-import "VideoStation/models"
+import (
+	"VideoStation/models"
+	"VideoStation/service"
+)
 
 type User struct {
 	ID       uint   `json:"id" form:"id" example:"1"`
@@ -15,5 +18,15 @@ func BuildUser(user models.User) User {
 		ID:       user.ID,
 		Username: user.Username,
 		CreateAt: user.CreatedAt.Unix(),
+	}
+}
+
+func BuildUserInfo(user models.User) service.UserInfo {
+	return service.UserInfo{
+		UserName: user.Username,
+		Avatars:  user.Avatars,
+		Gender:   user.Gender,
+		Age:      user.Age,
+		Email:    user.Email,
 	}
 }
