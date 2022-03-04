@@ -64,3 +64,7 @@ func ShowUserInfo(c *gin.Context) {
 		util.Logger().Info(err)
 	}
 }
+
+func ResetPassword(c *gin.Context) {
+	//
+}

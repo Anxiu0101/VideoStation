@@ -63,7 +63,7 @@ func (service *UserService) Register() *serializer.Response {
 	}
 }
 
-// Login 用户登录，
+// Login 用户登录
 // 1. 查询用户
 // 2. 验证用户密码
 // 3. 生成 token
@@ -138,6 +138,9 @@ type UserInfo struct {
 func (service *UserService) GetUserInfo(id int) serializer.Response {
 	code := e.Success
 
+	// 查询用户，是则下一步，
+	// 	若返回 未回应，则返回 用户不存在
+	//	若返回其他错误，则返回 数据库错误
 	var user models.User
 	if err := models.DB.Where("id = ?", id).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -165,4 +168,50 @@ func (service *UserService) GetUserInfo(id int) serializer.Response {
 		Data:   serializer.BuildUserInfo(user),
 		Msg:    e.GetMsg(code),
 	}
+}
+
+// ResetPassword 重设密码
+// 1. 查询用户是否存在
+// 2. 重设密码
+// 3. 返回结果
+func (service *UserService) ResetPassword(newPassword string) serializer.Response {
+	code := e.Success
+
+	// 查询用户，是则下一步，
+	// 	若返回 未回应，则返回 用户不存在
+	//	若返回其他错误，则返回 数据库错误
+	var user models.User
+	if err := models.DB.Where("user_name = ?", service.UserName).Find(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			logging.Info(err)
+			code = e.ErrorNotExistUser
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+		if err != nil {
+			logging.Info(err)
+			code = e.ErrorDatabase
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+
+	// 重设密码
+	if err := user.SetPassword(newPassword); err != nil {
+		logging.Info(err)
+		code = e.InvalidParams
+	}
+
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildUserInfo(user),
+		Msg:    e.GetMsg(code),
+	}
+
 }
