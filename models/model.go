@@ -25,7 +25,7 @@ type Model struct {
 func Setup() {
 	var err error
 
-	// pass conf to dsn
+	// pass conf to dsn, meet the problem that there is not
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		conf.DatabaseSetting.User,
 		conf.DatabaseSetting.Password,
@@ -34,7 +34,7 @@ func Setup() {
 	)
 	fmt.Println(dsn)
 	if dsn == ":@tcp()/?charset=utf8&parseTime=True&loc=Local" {
-		dsn = "Anxiu:7391839@tcp(127.0.0.1:3306)/videostation?charset=utf8&parseTime=True&loc=Local"
+		dsn = "anxiu:7391839@tcp(127.0.0.1:3306)/videostation?charset=utf8&parseTime=True&loc=Local"
 	}
 	fmt.Println(dsn)
 
@@ -57,8 +57,8 @@ func Setup() {
 	mysqlDB.SetConnMaxLifetime(time.Hour) // SetConnMaxLifetime 设置了连接可复用的最大时间
 
 	// set auto migrate
-	//DB.Set("gorm:table_options", "charset=utf8mb4").
-	//	AutoMigrate(&User{})
+	DB.Set("gorm:table_options", "charset=utf8mb4").
+		AutoMigrate(&User{})
 }
 
 // CloseDB Close database

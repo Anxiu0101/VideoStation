@@ -124,14 +124,6 @@ func (service *UserService) Login() serializer.Response {
 	}
 }
 
-type UserInfo struct {
-	UserName string `form:"user_name" json:"user_name"`
-	Avatars  string `form:"avatars" json:"avatars"`
-	Gender   int    `form:"gender" json:"gender"`
-	Age      int    `form:"age" json:"age"`
-	Email    string `form:"email" json:"email"`
-}
-
 // GetUserInfo 获取用户资料
 // 1. 查询用户
 // 2. 返回结果

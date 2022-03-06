@@ -9,14 +9,14 @@ type User struct {
 	gorm.Model
 
 	// 用户基础信息
-	Username   string `json:"username" gorm:"uniqueIndex"`
-	Ciphertext string // 加密密码
+	Username   string `json:"username" gorm:"uniqueIndex;size:25"`
+	Ciphertext string `gorm:"size:255"`
 	Avatars    string `json:"avatars"`
 
 	// 用户详细信息
-	Gender int    `json:"gender"`
-	Age    int    `json:"age"`
-	Email  string `json:"email"`
+	Gender uint   `json:"gender"`
+	Age    uint   `json:"age"`
+	Email  string `json:"email" gorm:"size:25;not null;index"`
 
 	//账户信息
 	State int `json:"state"`

@@ -1,4 +1,4 @@
-package controller
+package api
 
 import (
 	"github.com/gin-gonic/gin"
@@ -65,6 +65,13 @@ func ShowUserInfo(c *gin.Context) {
 	}
 }
 
-func ResetPassword(c *gin.Context) {
-	//
-}
+//func ResetPassword(c *gin.Context) {
+//	var userResetPasswordService service.UserService
+//	if err := c.ShouldBind(&userResetPasswordService); err != nil {
+//		newPassword := c.
+//	}
+//}
+//
+//func ()  {
+//
+//}

@@ -11,6 +11,7 @@ const (
 	ErrorHaveExistUser       = 10002
 	ErrorFailEncryption      = 10003
 	ErrorPasswordFailCompare = 10004
+	ErrorNewPasswordNull     = 10005
 
 	// token 错误
 	ErrorUserCheckTokenFail    = 30001 //token 错误
@@ -18,5 +19,5 @@ const (
 	ErrorUserToken             = 30003 //token 生成失败
 
 	// 数据库错误
-	ErrorDatabase = 40001
+	ErrorDatabase = 50001
 )

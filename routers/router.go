@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"VideoStation/controller"
+	"VideoStation/api"
 	"VideoStation/middleware"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -19,15 +19,15 @@ func InitRouter() *gin.Engine {
 		// 用户登录与用户注册
 		unLogUserApi := userApi.Group("/user")
 		{
-			unLogUserApi.POST("/register", controller.UserRegister)
-			unLogUserApi.POST("/login", controller.UserLogin)
+			unLogUserApi.POST("/register", api.UserRegister)
+			unLogUserApi.POST("/login", api.UserLogin)
 		}
 
 		// 用户其他操作
 		loggedUserApi := userApi.Group("/")
 		loggedUserApi.Use(middleware.JWT())
 		{
-			loggedUserApi.GET("user/:id", controller.ShowUserInfo)
+			loggedUserApi.GET("user/:id", api.ShowUserInfo)
 		}
 	}
 

@@ -10,6 +10,8 @@ West2 Assignment 4
 
 #### 用户结构体
 
+
+
 - [x] username 用户名
 - [x] password 密码
 - [x] avatars 头像
@@ -84,3 +86,4 @@ West2 Assignment 4
   > 如何解决数个管理员同时管理一个视频的冲突情况？
 
 - [ ] 封禁用户账号
+

@@ -9,6 +9,7 @@ var MsgFlags = map[int]string{
 	ErrorHaveExistUser:       "用户已存在",
 	ErrorFailEncryption:      "加密失败",
 	ErrorPasswordFailCompare: "用户密码错误",
+	ErrorNewPasswordNull:     "新密码为空",
 
 	ErrorUserCheckTokenFail:    "Token 鉴权失败",
 	ErrorUserCheckTokenTimeout: "Token 已超时",
