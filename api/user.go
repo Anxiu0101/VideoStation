@@ -75,3 +75,12 @@ func ShowUserInfo(c *gin.Context) {
 //func ()  {
 //
 //}
+
+func UploadVideo(c *gin.Context) {
+	var UserUploadService service.UserService
+
+	if err := c.ShouldBind(&UserUploadService); err != nil {
+
+	}
+
+}

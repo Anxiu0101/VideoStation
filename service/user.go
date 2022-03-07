@@ -1,10 +1,6 @@
 package service
 
 import (
-	"errors"
-
-	"gorm.io/gorm"
-
 	"VideoStation/models"
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/logging"
@@ -76,24 +72,7 @@ func (service *UserService) Login() serializer.Response {
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
 	var user models.User
 	if err := models.DB.Where("user_name=?", service.UserName).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			logging.Info(err)
-			code = e.ErrorNotExistUser
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
-		if err != nil {
-			logging.Info(err)
-			code = e.ErrorDatabase
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
+		util.CheckQueryErrorInDB(err)
 	}
 
 	// 验证用户密码是否正确，是则下一步，否则返回 "用户密码错误"
@@ -135,24 +114,7 @@ func (service *UserService) GetUserInfo(id int) serializer.Response {
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
 	if err := models.DB.Where("id = ?", id).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			logging.Info(err)
-			code = e.ErrorNotExistUser
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
-		if err != nil {
-			logging.Info(err)
-			code = e.ErrorDatabase
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
+		util.CheckQueryErrorInDB(err)
 	}
 
 	return serializer.Response{
@@ -174,24 +136,7 @@ func (service *UserService) ResetPassword(newPassword string) serializer.Respons
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
 	if err := models.DB.Where("user_name = ?", service.UserName).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			logging.Info(err)
-			code = e.ErrorNotExistUser
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
-		if err != nil {
-			logging.Info(err)
-			code = e.ErrorDatabase
-
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
+		util.CheckQueryErrorInDB(err)
 	}
 
 	// 重设密码

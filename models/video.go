@@ -10,38 +10,12 @@ type Video struct {
 	UpID uint `json:"publisher_id"`
 	Up   User `json:"publisher" gorm:"foreignKey:UpID"`
 
-	Video       string    `json:"video"`
-	DanmuList   []Danmu   `json:"danmu_list"`
-	CommentList []Comment `json:"comment_list"`
-	State       int       `json:"state"`
-}
+	Title        string `json:"title" gorm:"size:50;index"`
+	Video        string `json:"video" gorm:"size:255"`
+	Introduction string `json:"introduction" gorm:"size:255"`
 
-// Danmu 即弹幕
-// 	Sender 是发送者，
-// 	Content 是弹幕内容，
-// 	Index 是弹幕在视频时间线的位置，单位为秒
-type Danmu struct {
-	gorm.Model
-
-	SenderID uint `json:"sender_id"`
-	Sender   User `json:"sender" gorm:"foreignKey:SenderID"`
-
-	Content string `json:"content"`
-	Index   int    `json:"index"`
-}
-
-// Comment 评论
-// 	Sender 发送者，
-// 	Receiver 接受者，也就是被回复者，若该字段 ID 为 0，则为视频评论
-// 	Content 评论内容
-type Comment struct {
-	gorm.Model
-
-	SenderID uint `json:"sender_id"`
-	Sender   User `json:"sender" gorm:"foreignKey:SenderID"`
-
-	ReceiverID uint `json:"receiver_id"`
-	Receiver   User `json:"receiver" gorm:"foreignKey:ReceiverID"`
-
-	Content string `json:"content"`
+	// 视频审查，0 未审查，1 审查通过，2 审查不通过
+	State int `json:"state" gorm:"default:0"`
+	// 点击量
+	Clicks int `json:"clicks" gorm:"default:0"`
 }
