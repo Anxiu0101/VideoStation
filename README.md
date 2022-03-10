@@ -2,6 +2,10 @@
 
 West2 Assignment 4
 
+[Postman auto doc](https://documenter.getpostman.com/view/16949749/UVsHS7Cv#intro)
+
+[project address](https://github.com/Anxiu0101/VideoStation)
+
 ## Project Structure
 
 ![VideoStation](README.assets/VideoStation.svg)
