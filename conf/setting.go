@@ -9,8 +9,8 @@ import (
 )
 
 type App struct {
-	JwtSecret       string
 	PageSize        int
+	JwtSecret       string
 	RuntimeRootPath string
 
 	ImagePrefixUrl string
@@ -61,10 +61,11 @@ func Setup() {
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
 
+	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
 
-	fmt.Println(DatabaseSetting.User)
+	fmt.Println("DatabaseSetting.User: " + DatabaseSetting.User)
 }
 
 // mapTo map section

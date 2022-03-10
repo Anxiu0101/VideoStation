@@ -10,8 +10,8 @@ import (
 
 // UserService 用户服务
 type UserService struct {
-	UserName string `form:"user_name" json:"user_name" binding:"required,min=3,max=15" example:"FanOne"`
-	Password string `form:"password" json:"password" binding:"required,min=5,max=16" example:"FanOne666"`
+	UserName string `form:"user_name" json:"user_name" binding:"required,min=3,max=15" example:"Anxiu"`
+	Password string `form:"password" json:"password" binding:"required,min=5,max=16" example:"Anxiu123456"`
 }
 
 // Register 用户注册，

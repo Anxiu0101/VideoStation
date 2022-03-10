@@ -14,6 +14,12 @@ func InitRouter() *gin.Engine {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"msg": "pong!",
+		})
+	})
+
 	userApi := r.Group("/")
 	{
 		// 用户登录与用户注册
