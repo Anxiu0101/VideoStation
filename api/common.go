@@ -2,6 +2,7 @@ package api
 
 import (
 	"VideoStation/conf"
+	"VideoStation/pkg/e"
 	"VideoStation/serializer"
 	"encoding/json"
 	"fmt"
@@ -23,13 +24,13 @@ func ErrorResponse(err error) serializer.Response {
 	}
 	if _, ok := err.(*json.UnmarshalTypeError); ok {
 		return serializer.Response{
-			Status: 40001,
+			Status: e.ErrorJSONNotMatch,
 			Msg:    "JSON类型不匹配",
 			Error:  fmt.Sprint(err),
 		}
 	}
 	return serializer.Response{
-		Status: 40001,
+		Status: e.InvalidParams,
 		Msg:    "参数错误",
 		Error:  fmt.Sprint(err),
 	}

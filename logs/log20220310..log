@@ -1,0 +1,4 @@
+[INFO][dbErrorCheck.go:22]2022/03/10 19:18:38 [Error 1054: Unknown column 'user_name' in 'where clause']
+[INFO][dbErrorCheck.go:22]2022/03/10 19:21:27 [Error 1054: Unknown column 'user_name' in 'where clause']
+[INFO][dbErrorCheck.go:22]2022/03/10 19:25:21 [Error 1054: Unknown column 'user_name' in 'where clause']
+[INFO][dbErrorCheck.go:22]2022/03/10 19:29:46 [Error 1054: Unknown column 'user_name' in 'where clause']

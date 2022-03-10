@@ -10,7 +10,7 @@ import (
 
 // UserService 用户服务
 type UserService struct {
-	UserName string `form:"user_name" json:"user_name" binding:"required,min=3,max=15" example:"Anxiu"`
+	Username string `form:"username" json:"user_name" binding:"required,min=3,max=15" example:"Anxiu"`
 	Password string `form:"password" json:"password" binding:"required,min=5,max=16" example:"Anxiu123456"`
 }
 
@@ -21,7 +21,7 @@ type UserService struct {
 func (service *UserService) Register() *serializer.Response {
 	code := e.Success
 	var user models.User
-	count := models.DB.Model(&models.User{}).Where("user_name = ?", service.UserName).Find(&user).RowsAffected
+	count := models.DB.Model(&models.User{}).Where("user_name = ?", service.Username).Find(&user).RowsAffected
 
 	// 查询用户名是否已存在，是则下一步，否则返回 "用户已存在"
 	if count > 0 {
@@ -33,7 +33,7 @@ func (service *UserService) Register() *serializer.Response {
 	}
 
 	// 为新用户设置密码，成功则下一步，否则返回 "加密失败"
-	user.Username = service.UserName
+	user.Username = service.Username
 	if err := user.SetPassword(service.Password); err != nil {
 		logging.Info(err)
 		code = e.ErrorFailEncryption
@@ -71,12 +71,12 @@ func (service *UserService) Login() serializer.Response {
 	//	若返回错误为 "未回应"，则返回 "用户不存在"，
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
 	var user models.User
-	if err := models.DB.Where("user_name=?", service.UserName).Find(&user).Error; err != nil {
+	if err := models.DB.Where("username = ?", service.Username).Find(&user).Error; err != nil {
 		util.CheckQueryErrorInDB(err)
 	}
 
 	// 验证用户密码是否正确，是则下一步，否则返回 "用户密码错误"
-	if user.CheckPassword(service.Password) == false {
+	if !user.CheckPassword(service.Password) {
 		code = e.ErrorPasswordFailCompare
 		return serializer.Response{
 			Status: code,
@@ -85,7 +85,7 @@ func (service *UserService) Login() serializer.Response {
 	}
 
 	// 生成 token，是则下一步，否则返回 "Token 生成失败"
-	token, err := util.GenerateToken(user.ID, service.UserName, 0)
+	token, err := util.GenerateToken(user.ID, service.Username, 0)
 	if err != nil {
 		logging.Info(err)
 		code = e.ErrorUserToken
@@ -135,7 +135,7 @@ func (service *UserService) ResetPassword(newPassword string) serializer.Respons
 	// 	若返回 未回应，则返回 用户不存在
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
-	if err := models.DB.Where("user_name = ?", service.UserName).Find(&user).Error; err != nil {
+	if err := models.DB.Where("user_name = ?", service.Username).Find(&user).Error; err != nil {
 		util.CheckQueryErrorInDB(err)
 	}
 

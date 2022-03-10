@@ -18,6 +18,9 @@ const (
 	ErrorUserCheckTokenTimeout = 30002 //token 过期
 	ErrorUserToken             = 30003 //token 生成失败
 
+	// JSON 错误
+	ErrorJSONNotMatch = 40001 // JSON类型不匹配
+
 	// 数据库错误
 	ErrorDatabase = 50001
 )

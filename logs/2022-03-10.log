@@ -1,0 +1,2 @@
+time="2022-03-10 18:08:19" level=info msg="Key: 'UserService.UserName' Error:Field validation for 'UserName' failed on the 'required' tag\nKey: 'UserService.Password' Error:Field validation for 'Password' failed on the 'required' tag"
+time="2022-03-10 19:19:07" level=info msg="Key: 'UserService.UserName' Error:Field validation for 'UserName' failed on the 'required' tag"

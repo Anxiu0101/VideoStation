@@ -21,7 +21,7 @@ func BuildUser(user models.User) User {
 }
 
 type UserInfo struct {
-	UserName string `form:"user_name" json:"user_name"`
+	Username string `form:"username" json:"username"`
 	Avatars  string `form:"avatars" json:"avatars"`
 	Gender   uint   `form:"gender" json:"gender"`
 	Age      uint   `form:"age" json:"age"`
@@ -30,7 +30,7 @@ type UserInfo struct {
 
 func BuildUserInfo(user models.User) UserInfo {
 	return UserInfo{
-		UserName: user.Username,
+		Username: user.Username,
 		Avatars:  user.Avatars,
 		Gender:   user.Gender,
 		Age:      user.Age,

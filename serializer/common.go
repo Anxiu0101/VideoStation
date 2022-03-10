@@ -1,5 +1,7 @@
 package serializer
 
+import "VideoStation/pkg/e"
+
 // Response 基础序列化器
 type Response struct {
 	Status int         `json:"status"`
@@ -29,7 +31,7 @@ type TrackedErrorResponse struct {
 // BuildListResponse 带有总数的列表构建器
 func BuildListResponse(items interface{}, total uint) Response {
 	return Response{
-		Status: 200,
+		Status: e.Success,
 		Data: DataList{
 			Item:  items,
 			Total: total,

@@ -15,6 +15,8 @@ var MsgFlags = map[int]string{
 	ErrorUserCheckTokenTimeout: "Token 已超时",
 	ErrorUserToken:             "Token 生成失败",
 
+	ErrorJSONNotMatch: "JSON类型不匹配",
+
 	ErrorDatabase: "数据库操作错误",
 }
 
