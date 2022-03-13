@@ -23,4 +23,7 @@ const (
 
 	// 数据库错误
 	ErrorDatabase = 50001
+
+	// 视频错误
+	ErrorNotExistVideo = 60001
 )

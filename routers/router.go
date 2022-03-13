@@ -20,6 +20,7 @@ func InitRouter() *gin.Engine {
 		})
 	})
 
+	// 用户操作
 	userApi := r.Group("/")
 	{
 		// 用户登录与用户注册
@@ -37,6 +38,14 @@ func InitRouter() *gin.Engine {
 		}
 	}
 
+	// 视频操作
+	apiv1 := r.Group("/")
+	apiv1.Use(middleware.JWT())
+	{
+		apiv1.PUT("api/v1/favorite/uid:/vid:", api.FavoriteVideo)
+	}
+
+	// 404 信息返回
 	r.NoRoute(func(c *gin.Context) {
 		c.String(http.StatusNotFound, "404 not found")
 	})

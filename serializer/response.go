@@ -7,9 +7,9 @@ type ResponseUser struct {
 	Error  string `json:"error" example:""`
 }
 
-//type ResponseTask struct {
-//	Status int    `json:"status"`
-//	Data   Task   `json:"data"`
-//	Msg    string `json:"msg"`
-//	Error  string `json:"error"`
-//}
+type ResponseVideo struct {
+	Status int    `json:"status"`
+	Data   Video  `json:"video"`
+	Msg    string `json:"msg"`
+	Error  string `json:"error"`
+}

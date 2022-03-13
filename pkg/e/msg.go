@@ -18,6 +18,8 @@ var MsgFlags = map[int]string{
 	ErrorJSONNotMatch: "JSON类型不匹配",
 
 	ErrorDatabase: "数据库操作错误",
+
+	ErrorNotExistVideo: "视频不存在",
 }
 
 func GetMsg(code int) string {

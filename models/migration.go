@@ -6,5 +6,6 @@ func migration() {
 		AutoMigrate(&User{},
 			&Video{},
 			&Comment{},
-			&Danmu{})
+			&Danmu{},
+			&Favorite{})
 }
