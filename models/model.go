@@ -57,8 +57,7 @@ func Setup() {
 	mysqlDB.SetConnMaxLifetime(time.Hour) // SetConnMaxLifetime 设置了连接可复用的最大时间
 
 	// set auto migrate
-	_ = DB.Set("gorm:table_options", "charset=utf8mb4").
-		AutoMigrate(&User{})
+	migration()
 }
 
 // CloseDB Close database
