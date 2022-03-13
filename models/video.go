@@ -7,8 +7,8 @@ import (
 type Video struct {
 	gorm.Model
 
-	UpID uint `json:"publisher_id"`
-	Up   User `json:"publisher" gorm:"foreignKey:UpID"`
+	UID  uint `json:"uid"`
+	User User `json:"user" gorm:"foreignKey:UID"`
 
 	Title        string `json:"title" gorm:"size:50;index"`
 	Video        string `json:"video" gorm:"size:255"`

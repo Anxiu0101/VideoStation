@@ -42,7 +42,7 @@ func InitRouter() *gin.Engine {
 	apiv1 := r.Group("/")
 	apiv1.Use(middleware.JWT())
 	{
-		apiv1.PUT("api/v1/favorite/uid:/vid:", api.FavoriteVideo)
+		apiv1.PUT("api/v1/favorite/:uid/:vid", api.FavoriteVideo)
 	}
 
 	// 404 信息返回
