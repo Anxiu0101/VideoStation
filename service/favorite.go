@@ -14,7 +14,7 @@ import (
 // 2. 查询视频是否存在
 // 3. 在数据库中增添关系
 // 4. 返回结果
-func (service *VideoService) FavoriteVideo(group string) serializer.Response {
+func (service *FavoriteVideoService) FavoriteVideo(group string) serializer.Response {
 	code := e.Success
 
 	// 检查用户是否存在

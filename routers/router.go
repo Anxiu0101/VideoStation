@@ -38,11 +38,21 @@ func InitRouter() *gin.Engine {
 		}
 	}
 
-	// 视频操作
-	apiv1 := r.Group("/")
+	// Api version-1
+	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middleware.JWT())
 	{
-		apiv1.PUT("api/v1/favorite/:uid/:vid", api.FavoriteVideo)
+		// 收藏接口
+		favoriteApi := apiv1.Group("/favorite")
+		{
+			favoriteApi.PUT("/:uid/:vid", api.FavoriteVideo)
+		}
+
+		// 视频接口
+		videoApi := apiv1.Group("/video")
+		{
+			videoApi.POST("/upload", api.UploadVideo)
+		}
 	}
 
 	// 404 信息返回

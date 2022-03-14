@@ -9,14 +9,17 @@ import (
 )
 
 type App struct {
-	PageSize        int
-	JwtSecret       string
-	RuntimeRootPath string
+	PageSize  int
+	JwtSecret string
 
 	ImagePrefixUrl string
 	ImageSavePath  string
 	ImageMaxSize   int
 	ImageAllowExts []string
+
+	VideoPrefixUrl string
+	VideoSavePath  string
+	VideoAllowExts []string
 
 	LogSavePath string
 	LogSaveName string
