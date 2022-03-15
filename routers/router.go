@@ -41,7 +41,7 @@ func InitRouter() *gin.Engine {
 	// 管理员操作
 	adminApi := r.Group("/")
 	{
-		adminApi.POST("admin/login", api.AdminLogin)
+		adminApi.POST("/admin/login", api.AdminLogin)
 	}
 
 	// Api version-1

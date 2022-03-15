@@ -20,6 +20,7 @@ var MsgFlags = map[int]string{
 	ErrorDatabase: "数据库操作错误",
 
 	ErrorNotExistVideo: "视频不存在",
+	ErrorUploadVideo:   "视频上传失败",
 }
 
 func GetMsg(code int) string {
