@@ -2,6 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
+	"mime/multipart"
 )
 
 type Video struct {
@@ -18,4 +19,8 @@ type Video struct {
 	State int `json:"state" gorm:"default:0"`
 	// 点击量
 	Clicks int `json:"clicks" gorm:"default:0"`
+}
+
+func SaveUploadFile(file, cover multipart.File, dst string) {
+
 }

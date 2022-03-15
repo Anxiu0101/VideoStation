@@ -38,6 +38,12 @@ func InitRouter() *gin.Engine {
 		}
 	}
 
+	// 管理员操作
+	adminApi := r.Group("/")
+	{
+		adminApi.POST("admin/login", api.AdminLogin)
+	}
+
 	// Api version-1
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middleware.JWT())
