@@ -7,11 +7,15 @@ import (
 	"net/http"
 )
 
+func GetVideo(c *gin.Context) {
+
+}
+
 func GetVideos(c *gin.Context) {
 
 }
 
-func UploadVideo(c *gin.Context) {
+func UploadFile(c *gin.Context) {
 	code := e.Success
 	file, error := c.FormFile("file")
 	if error != nil {

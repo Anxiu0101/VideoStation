@@ -35,6 +35,7 @@ func InitRouter() *gin.Engine {
 		loggedUserApi.Use(middleware.JWT())
 		{
 			loggedUserApi.GET("user/:id", api.ShowUserInfo)
+			loggedUserApi.POST("/user/:id/avatars", api.UploadFile)
 		}
 	}
 
@@ -44,7 +45,7 @@ func InitRouter() *gin.Engine {
 		adminApi.POST("/admin/login", api.AdminLogin)
 	}
 
-	// Api version-1
+	// Api version one
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middleware.JWT())
 	{
@@ -55,9 +56,10 @@ func InitRouter() *gin.Engine {
 		}
 
 		// 视频接口
-		videoApi := apiv1.Group("/video")
+		videoApi := apiv1.Group("/")
 		{
-			videoApi.POST("/upload", api.UploadVideo)
+			videoApi.GET("/video/:id", api.GetVideo)
+			videoApi.POST("/video/upload", api.UploadFile)
 		}
 	}
 

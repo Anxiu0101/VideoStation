@@ -24,3 +24,9 @@ type Video struct {
 func SaveUploadFile(file, cover multipart.File, dst string) {
 
 }
+
+// VideoURL 返回视频地址
+func (video *Video) VideoURL() string {
+
+	return ""
+}
