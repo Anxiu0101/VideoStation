@@ -16,7 +16,7 @@ func ErrorResponse(err error) serializer.Response {
 			field := conf.T(fmt.Sprintf("Field.%s", e.Field))
 			tag := conf.T(fmt.Sprintf("Tag.Valid.%s", e.Tag))
 			return serializer.Response{
-				Status: 40001,
+				Status: 500,
 				Msg:    fmt.Sprintf("%s%s", field, tag),
 				Error:  fmt.Sprint(err),
 			}
