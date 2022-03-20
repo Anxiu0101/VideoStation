@@ -35,7 +35,7 @@ func InitRouter() *gin.Engine {
 		loggedUserApi.Use(middleware.JWT())
 		{
 			loggedUserApi.GET("user/:id", api.ShowUserInfo)
-			//loggedUserApi.POST("/user/:id/avatars", service.UploadFile)
+			loggedUserApi.POST("/user/:id/avatars", api.UploadFile)
 		}
 	}
 
@@ -53,7 +53,7 @@ func InitRouter() *gin.Engine {
 		videoApi := apiv1.Group("/")
 		{
 			videoApi.GET("/video/:id", api.GetVideo)
-			videoApi.POST("/video/upload", api.Publish)
+			videoApi.POST("/video/upload", api.UploadFile)
 			videoApi.GET("/favorite/video/:vid", api.FavoriteVideo)
 		}
 	}

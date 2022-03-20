@@ -52,6 +52,15 @@ func UserLogin(c *gin.Context) {
 	}
 }
 
+// ShowUserInfo
+// @Tags USER
+// @Summary 用户资料展示
+// @Produce json
+// @Accept json
+// @Param     data    body     service.UserService    true      "user_name, password"
+// @Success 200 {object} serializer.ResponseUser "{"success":true,"data":{},"msg":"ok"}"
+// @Failure 500 {object} serializer.ResponseUser "{"status":500,"data":{},"Msg":{},"Error":"error"}"
+// @Router /user/:id [get]
 func ShowUserInfo(c *gin.Context) {
 	// 创建名为 用户信息获取服务
 	var userShowInfoService service.UserService
