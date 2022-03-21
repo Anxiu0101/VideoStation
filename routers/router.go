@@ -49,17 +49,12 @@ func InitRouter() *gin.Engine {
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middleware.JWT())
 	{
-		// 收藏接口
-		favoriteApi := apiv1.Group("/favorite")
-		{
-			favoriteApi.PUT("/:uid/:vid", api.FavoriteVideo)
-		}
-
 		// 视频接口
 		videoApi := apiv1.Group("/")
 		{
 			videoApi.GET("/video/:id", api.GetVideo)
 			videoApi.POST("/video/upload", api.UploadFile)
+			videoApi.GET("/favorite/video/:vid", api.FavoriteVideo)
 		}
 	}
 

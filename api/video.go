@@ -11,7 +11,11 @@ func GetVideo(c *gin.Context) {
 
 }
 
-func GetVideos(c *gin.Context) {
+func Recommend(c *gin.Context) {
+
+}
+
+func Publish(c *gin.Context) {
 
 }
 
@@ -29,7 +33,9 @@ func UploadFile(c *gin.Context) {
 	}
 
 	if err := c.SaveUploadedFile(file, "./upload/"+file.Filename); err != nil {
-		return // ErrorResponse(err)
+		res := ErrorResponse(err)
+		c.JSON(500, res)
+		return
 	}
 
 	address := "127.0.0.1:8000" + "/upload/" + file.Filename
