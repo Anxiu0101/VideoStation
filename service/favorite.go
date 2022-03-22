@@ -6,7 +6,6 @@ import (
 	"VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
-	"fmt"
 )
 
 // FavoriteVideo 收藏视频
@@ -26,7 +25,6 @@ func (service *FavoriteVideoService) FavoriteVideo(group string) serializer.Resp
 	// 检查视频是否存在
 	var video models.Video
 	if err := models.DB.Where("ID = ?", service.VID).Find(&video).Error; err != nil {
-		fmt.Println("here!!")
 		return util.CheckErrorVideoNoFound(err)
 	}
 

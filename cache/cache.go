@@ -2,6 +2,7 @@ package cache
 
 import (
 	"VideoStation/conf"
+	"VideoStation/pkg/util"
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
@@ -34,7 +35,7 @@ func Setup() {
 func SetValue(key string, value interface{}) {
 	err := client.Set(ctx, key, value, 0).Err()
 	if err != nil {
-		fmt.Println(err)
+		util.Logger().Info(err)
 		panic(err)
 	}
 }
@@ -44,7 +45,7 @@ func GetValue(key string) {
 	if err != redis.Nil {
 		fmt.Println(key + " does not exist")
 	} else if err != nil {
-		fmt.Println(err)
+		util.Logger().Info(err)
 		panic(err)
 	} else {
 		fmt.Println(key, val)
