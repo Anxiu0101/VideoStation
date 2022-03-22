@@ -7,25 +7,17 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-package main
-
-import (
-"context"
-"fmt"
-"github.com/go-redis/redis/v8"
-)
-
 var (
 	client *redis.Client
 	ctx    context.Context
 )
 
-func InitConn() {
+func Setup() {
 
 	client = redis.NewClient(&redis.Options{
-		Addr:     conf.RedisSetting.Host,
-		Password: conf.RedisSetting.Password,
-		DB:       0,
+		Addr:        conf.RedisSetting.Host,
+		Password:    conf.RedisSetting.Password,
+		DB:          0,
 		IdleTimeout: conf.RedisSetting.IdleTimeout,
 	})
 
@@ -33,17 +25,17 @@ func InitConn() {
 
 	ping, err := client.Ping(ctx).Result()
 	if err != nil {
-		fmt.Println("redis 连接失败", err.Error())
+		fmt.Println("redis fail to connect", err.Error())
 		return
 	}
-	fmt.Println("redis 连接成功", ping)
+	fmt.Println("redis connect successful", ping)
 }
 
 func SetValue(key string, value interface{}) {
 	err := client.Set(ctx, key, value, 0).Err()
 	if err != nil {
 		fmt.Println(err)
-		//panic(err)
+		panic(err)
 	}
 }
 
@@ -53,10 +45,9 @@ func GetValue(key string) {
 		fmt.Println(key + " does not exist")
 	} else if err != nil {
 		fmt.Println(err)
-		//panic(err)
+		panic(err)
 	} else {
 		fmt.Println(key, val)
 	}
 
 }
-

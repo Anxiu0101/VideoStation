@@ -10,8 +10,18 @@ import (
 
 // UserService 用户服务
 type UserService struct {
-	Username string `form:"username" json:"user_name" binding:"required,min=3,max=15" example:"Anxiu"`
+	Username string `form:"username" json:"username" binding:"required,min=3,max=15" example:"Anxiu"`
 	Password string `form:"password" json:"password" binding:"required,min=5,max=16" example:"Anxiu123456"`
+}
+
+type UserInfoService struct {
+}
+
+type UserUpdateInfoService struct {
+	Username string `form:"username" json:"username"`
+	Gender   uint   `form:"gender" json:"gender"`
+	Age      uint   `form:"age" json:"age"`
+	Email    string `form:"email" json:"email"`
 }
 
 // Register 用户注册，
@@ -21,7 +31,7 @@ type UserService struct {
 func (service *UserService) Register() *serializer.Response {
 	code := e.Success
 	var user models.User
-	count := models.DB.Model(&models.User{}).Where("user_name = ?", service.Username).Find(&user).RowsAffected
+	count := models.DB.Model(&models.User{}).Where("username = ?", service.Username).Find(&user).RowsAffected
 
 	// 查询用户名是否已存在，是则下一步，否则返回 "用户已存在"
 	if count > 0 {
@@ -106,17 +116,47 @@ func (service *UserService) Login() serializer.Response {
 // GetUserInfo 获取用户资料
 // 1. 查询用户
 // 2. 返回结果
-func (service *UserService) GetUserInfo(id int) serializer.Response {
+func (service *UserInfoService) GetUserInfo(uid int) serializer.Response {
 	code := e.Success
 
 	// 查询用户，是则下一步，
 	// 	若返回 未回应，则返回 用户不存在
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
-	if err := models.DB.Where("id = ?", id).Find(&user).Error; err != nil {
+	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
 		util.CheckErrorUserNoFound(err)
 	}
 
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildUserInfo(user),
+		Msg:    e.GetMsg(code),
+	}
+}
+
+// UpdateUserInfo 更新用户资料
+// 1. 查询用户
+// 2. 更新资料
+// 3. 返回结果
+func (service *UserUpdateInfoService) UpdateUserInfo(uid int) serializer.Response {
+	code := e.Success
+
+	// 查询用户，是则下一步，
+	// 	若返回 未回应，则返回 用户不存在
+	//	若返回其他错误，则返回 数据库错误
+	var user models.User
+	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
+		util.CheckErrorUserNoFound(err)
+	}
+
+	// 更新用户资料
+	user.Username = service.Username
+	user.Age = service.Age
+	user.Gender = service.Gender
+	user.Email = service.Email
+	models.DB.Where("id = ?", uid).Save(&user)
+
+	// 返回结果
 	return serializer.Response{
 		Status: code,
 		Data:   serializer.BuildUserInfo(user),
@@ -128,19 +168,21 @@ func (service *UserService) GetUserInfo(id int) serializer.Response {
 // 1. 查询用户是否存在
 // 2. 重设密码
 // 3. 返回结果
-func (service *UserService) ResetPassword(newPassword string) serializer.Response {
+func (service *UserInfoService) ResetPassword(id int, newPassword string) serializer.Response {
 	code := e.Success
 
 	// 查询用户，是则下一步，
 	// 	若返回 未回应，则返回 用户不存在
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
-	if err := models.DB.Where("user_name = ?", service.Username).Find(&user).Error; err != nil {
+	err := models.DB.Where("id = ?", id).Find(&user).Error
+	if err != nil {
 		util.CheckErrorUserNoFound(err)
 	}
 
 	// 重设密码
-	if err := user.SetPassword(newPassword); err != nil {
+	err = user.SetPassword(newPassword)
+	if err != nil {
 		logging.Info(err)
 		code = e.InvalidParams
 	}

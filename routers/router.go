@@ -34,8 +34,10 @@ func InitRouter() *gin.Engine {
 		loggedUserApi := userApi.Group("/")
 		loggedUserApi.Use(middleware.JWT())
 		{
-			loggedUserApi.GET("user/:id", api.ShowUserInfo)
+			loggedUserApi.GET("/user/:id/info", api.ShowUserInfo)
+			loggedUserApi.POST("/user/:id/info", api.UpdateUserInfo)
 			loggedUserApi.POST("/user/:id/avatars", api.UploadFile)
+			loggedUserApi.POST("/user/:id/password", api.ResetPassword)
 		}
 	}
 
