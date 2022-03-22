@@ -150,11 +150,13 @@ func (service *UserUpdateInfoService) UpdateUserInfo(uid int) serializer.Respons
 	}
 
 	// 更新用户资料
-	user.Username = service.Username
-	user.Age = service.Age
-	user.Gender = service.Gender
-	user.Email = service.Email
-	models.DB.Where("id = ?", uid).Save(&user)
+	models.DB.Model(&user).Where("id = ?", uid).
+		Updates(models.User{
+			Username: service.Username,
+			Age:      service.Age,
+			Gender:   service.Gender,
+			Email:    service.Email,
+		})
 
 	// 返回结果
 	return serializer.Response{
