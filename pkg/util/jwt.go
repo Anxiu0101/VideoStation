@@ -30,6 +30,7 @@ func GenerateToken(id uint, username string, authority int) (string, error) {
 		jwt.StandardClaims{
 			// 过期时间
 			ExpiresAt: expireTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
 			// 指定 token 发行人
 			Issuer: "video-station",
 		},

@@ -2,6 +2,8 @@ package api
 
 import (
 	"VideoStation/pkg/e"
+	"VideoStation/pkg/util"
+	"VideoStation/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -15,11 +17,14 @@ func Recommend(c *gin.Context) {
 
 }
 
-//func Publish(c *gin.Context) {
-//	var videoUploadService service.VideoService
-//	file, fileHeader, _ := c.Request.FormFile("file")
-//
-//}
+func Publish(c *gin.Context) {
+	var videoUploadService service.VideoService
+	_, fileHeader, _ := c.Request.FormFile("file")
+	c.ShouldBind(&videoUploadService)
+	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	res := videoUploadService.UploadVideo(claim.ID, fileHeader, fileHeader.Size)
+	c.JSON(http.StatusOK, res)
+}
 
 func UploadFile(c *gin.Context) {
 	code := e.Success
