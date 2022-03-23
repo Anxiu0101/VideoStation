@@ -27,4 +27,5 @@ const (
 	// 视频错误
 	ErrorNotExistVideo = 60001
 	ErrorUploadVideo   = 60002
+	ErrorLikeExist     = 60003
 )

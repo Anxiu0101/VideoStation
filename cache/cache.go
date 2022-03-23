@@ -9,31 +9,29 @@ import (
 )
 
 var (
-	client *redis.Client
-	ctx    context.Context
+	RedisClient *redis.Client
+	Ctx         context.Context
 )
 
 func Setup() {
-
-	client = redis.NewClient(&redis.Options{
+	RedisClient = redis.NewClient(&redis.Options{
 		Addr:        conf.RedisSetting.Host,
 		Password:    conf.RedisSetting.Password,
 		DB:          0,
 		IdleTimeout: conf.RedisSetting.IdleTimeout,
 	})
 
-	ctx = context.Background()
+	Ctx = context.Background()
 
-	ping, err := client.Ping(ctx).Result()
+	_, err := RedisClient.Ping(Ctx).Result()
 	if err != nil {
-		fmt.Println("redis fail to connect", err.Error())
+		util.Logger().Info("redis fail to connect", err.Error())
 		return
 	}
-	fmt.Println("redis connect successful", ping)
 }
 
 func SetValue(key string, value interface{}) {
-	err := client.Set(ctx, key, value, 0).Err()
+	err := RedisClient.Set(Ctx, key, value, 0).Err()
 	if err != nil {
 		util.Logger().Info(err)
 		panic(err)
@@ -41,7 +39,7 @@ func SetValue(key string, value interface{}) {
 }
 
 func GetValue(key string) {
-	val, err := client.Get(ctx, key).Result()
+	val, err := RedisClient.Get(Ctx, key).Result()
 	if err != redis.Nil {
 		fmt.Println(key + " does not exist")
 	} else if err != nil {

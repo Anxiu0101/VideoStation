@@ -15,10 +15,9 @@ type Video struct {
 	Video        string `json:"video" gorm:"size:255"`
 	Introduction string `json:"introduction" gorm:"size:255"`
 
-	// 视频审查，0 未审查，1 审查通过，2 审查不通过
-	State int `json:"state" gorm:"default:0"`
-	// 点击量
-	Clicks int `json:"clicks" gorm:"default:0"`
+	State   int     `json:"state" gorm:"default:0"`  // 视频审查，0 未审查，1 审查通过，2 审查不通过
+	Clicks  int     `json:"clicks" gorm:"default:0"` // 点击量
+	Weights float32 `json:"weights" gorm:"default:0"`
 }
 
 func SaveUploadFile(file, cover multipart.File, dst string) {

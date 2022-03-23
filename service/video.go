@@ -12,9 +12,9 @@ type VideoService struct {
 }
 
 type FavoriteVideoService struct {
-	VID  uint `json:"vid"`
-	UID  uint `json:"uid"`
-	UpID uint `json:"up_id"`
+	VID   uint   `json:"vid"`
+	UID   uint   `json:"uid"`
+	Group string `json:"group"`
 }
 
 func (service *VideoService) UploadVideo(video models.Video) {

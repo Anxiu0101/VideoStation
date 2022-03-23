@@ -15,9 +15,11 @@ func Recommend(c *gin.Context) {
 
 }
 
-func Publish(c *gin.Context) {
-
-}
+//func Publish(c *gin.Context) {
+//	var videoUploadService service.VideoService
+//	file, fileHeader, _ := c.Request.FormFile("file")
+//
+//}
 
 func UploadFile(c *gin.Context) {
 	code := e.Success

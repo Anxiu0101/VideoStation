@@ -9,7 +9,7 @@ type User struct {
 	gorm.Model
 
 	// 用户基础信息
-	Username   string `json:"username" gorm:"uniqueIndex;size:25"`
+	Username   string `json:"username" gorm:"uniqueIndex;size:25;not null"`
 	Ciphertext string `gorm:"size:255"`
 	Avatars    string `json:"avatars"`
 

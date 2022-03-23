@@ -7,6 +7,8 @@ import (
 type User struct {
 	ID       uint   `json:"id" form:"id" example:"1"`
 	Username string `json:"user_name" form:"user_name" example:"FanOne"`
+	Avatars  string `json:"avatars"`
+
 	Status   string `json:"status" form:"status"`
 	CreateAt int64  `json:"create_at" form:"create_at"`
 }

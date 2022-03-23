@@ -11,8 +11,10 @@ import (
 func LikeVideo(c *gin.Context) {
 	var videoLikeService service.VideoLikeService
 	vid := com.StrTo(c.Param("id")).MustInt()
+	uid := com.StrTo(c.Query("uid")).MustInt()
 	if err := c.ShouldBind(&videoLikeService); err == nil {
-		res := videoLikeService.LikeVideo(vid)
+		// int 转 uint 的问题需要修复
+		res := videoLikeService.LikeVideo(vid, uint(uid))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, ErrorResponse(err))

@@ -13,7 +13,7 @@ import (
 // 2. 查询视频是否存在
 // 3. 在数据库中增添关系
 // 4. 返回结果
-func (service *FavoriteVideoService) FavoriteVideo(group string) serializer.Response {
+func (service *FavoriteVideoService) FavoriteVideo() serializer.Response {
 	code := e.Success
 
 	// 检查用户是否存在
@@ -32,7 +32,7 @@ func (service *FavoriteVideoService) FavoriteVideo(group string) serializer.Resp
 	data := models.Favorite{
 		UID:   service.UID,
 		VID:   service.VID,
-		Group: group,
+		Group: service.Group,
 	}
 	if err := models.DB.Create(&data).Error; err != nil {
 		logging.Info(err)

@@ -7,5 +7,5 @@ func migration() {
 			&Video{},
 			&Comment{},
 			&Danmu{},
-			&Favorite{})
+			&Interactive{})
 }

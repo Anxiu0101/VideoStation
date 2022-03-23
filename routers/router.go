@@ -55,7 +55,7 @@ func InitRouter() *gin.Engine {
 		videoApi := apiv1.Group("/")
 		{
 			videoApi.GET("/video/:id", api.GetVideo)
-			videoApi.POST("/video/upload", api.UploadFile)
+			videoApi.POST("/video/upload", api.Publish)
 			videoApi.GET("/video/:vid/favorite", api.FavoriteVideo)
 			videoApi.POST("/video/:vid/like", api.LikeVideo)
 		}

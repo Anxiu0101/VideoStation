@@ -97,3 +97,10 @@ West2 Assignment 4
 
 - [ ] 封禁用户账号
 
+
+## Problems
+
+- 部分接口获取用户ID需要参数，而没有从 token 中解析
+- 文件上传未处理
+    - 文件重名问题
+- favorite 功能不依赖 Interactive 结构体而是有自己的结构体，未并入
