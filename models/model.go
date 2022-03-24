@@ -32,11 +32,6 @@ func Setup() {
 		conf.DatabaseSetting.Host,
 		conf.DatabaseSetting.Name,
 	)
-	fmt.Println(dsn)
-	if dsn == ":@tcp()/?charset=utf8&parseTime=True&loc=Local" {
-		dsn = "anxiu:7391839@tcp(127.0.0.1:3306)/videostation?charset=utf8&parseTime=True&loc=Local"
-	}
-	fmt.Println(dsn)
 
 	// open the database and buffer the conf
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{

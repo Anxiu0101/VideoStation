@@ -13,7 +13,7 @@ type Video struct {
 
 	Title        string `json:"title" gorm:"size:50;index"`
 	Video        string `json:"video" gorm:"size:255"`
-	Introduction string `json:"introduction" gorm:"size:255"`
+	Introduction string `json:"introduction" gorm:"size:255;default:'This video has no intro'"`
 
 	State   int     `json:"state" gorm:"default:0"`  // 视频审查，0 未审查，1 审查通过，2 审查不通过
 	Clicks  int     `json:"clicks" gorm:"default:0"` // 点击量

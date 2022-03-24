@@ -3,6 +3,7 @@ package service
 import (
 	"VideoStation/models"
 	"VideoStation/pkg/e"
+	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
@@ -22,7 +23,7 @@ func (service *AdminService) Login() serializer.Response {
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
 	var user models.User
 	if err := models.DB.Where("username = ?", service.Username).Find(&user).Error; err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 验证管理员密码是否正确，是则下一步，否则返回 "用户密码错误"
@@ -58,7 +59,7 @@ func (service *AdminService) BanUser() serializer.Response {
 
 	var user models.User
 	if err := models.DB.Where("username = ?", service.Username).Find(&user).Error; err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 返回成功结果

@@ -6,6 +6,7 @@ import (
 	"VideoStation/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -19,9 +20,28 @@ func Recommend(c *gin.Context) {
 
 func Publish(c *gin.Context) {
 	var videoUploadService service.VideoService
-	_, fileHeader, _ := c.Request.FormFile("file")
-	c.ShouldBind(&videoUploadService)
-	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	var fileHeader = new(multipart.FileHeader)
+	var err error
+	fileHeader, err = c.FormFile("video")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":  e.InvalidParams,
+			"error": "文件为空",
+		})
+		return
+	}
+	//c.ShouldBind(&videoUploadService)
+	videoUploadService.Title = c.Query("title")
+	videoUploadService.Introduction = c.Query("introduction'")
+	fmt.Println(videoUploadService.Introduction + "!")
+	claim, err := util.ParseToken(c.GetHeader("Authorization"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":  e.ErrorUserToken,
+			"error": "Token 解析失败",
+		})
+		return
+	}
 	res := videoUploadService.UploadVideo(claim.ID, fileHeader, fileHeader.Size)
 	c.JSON(http.StatusOK, res)
 }

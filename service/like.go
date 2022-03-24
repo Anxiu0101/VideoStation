@@ -4,7 +4,7 @@ import (
 	"VideoStation/cache"
 	"VideoStation/models"
 	"VideoStation/pkg/e"
-	"VideoStation/pkg/util"
+	"VideoStation/pkg/errorCheck"
 	"VideoStation/serializer"
 )
 
@@ -22,13 +22,13 @@ func (service *VideoLikeService) LikeVideo(vid int, uid uint) serializer.Respons
 	// 检查用户是否存在
 	var user models.User
 	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
-		return util.CheckErrorUserNoFound(err)
+		return errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 检查视频是否存在
 	var video models.Video
 	if err := models.DB.Where("id = ?", vid).Find(&video).Error; err != nil {
-		return util.CheckErrorVideoNoFound(err)
+		return errorCheck.CheckErrorVideoNoFound(err)
 	}
 
 	// 将点赞写入缓存

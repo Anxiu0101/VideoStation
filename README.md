@@ -73,7 +73,7 @@ West2 Assignment 4
 
 #### 方法
 
-- [ ] 用户上传视频
+- [x] 用户上传视频
 - [ ] 用户点赞
 - [ ] 用户评论
     - [ ] 楼中楼功能？没思路
@@ -104,3 +104,4 @@ West2 Assignment 4
 - 文件上传未处理
     - 文件重名问题
 - favorite 功能不依赖 Interactive 结构体而是有自己的结构体，未并入
+- Upload 不能解析 introduction 字段，问题未排查，从传入时就有问题。

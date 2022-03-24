@@ -5,15 +5,16 @@ import (
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
+	"fmt"
 	"mime/multipart"
 	"net/http"
 )
 
 type VideoService struct {
-	UpID uint        `json:"up_id"`
-	Up   models.User `json:"up"`
+	UID  uint        `json:"uid"`
+	User models.User `json:"user"`
 
-	Title        string `json:"title" gorm:"size:50;index"`
+	Title        string `json:"title" gorm:"size:50"`
 	Video        string `json:"video" gorm:"size:255"`
 	Introduction string `json:"introduction" gorm:"size:255"`
 
@@ -26,6 +27,7 @@ type VideoService struct {
 }
 
 type FavoriteVideoService struct {
+	VID   uint   `json:"vid"`
 	Group string `json:"group"`
 }
 
@@ -38,6 +40,9 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 			Error:  info,
 		}
 	}
+
+	fmt.Println(service.Introduction + "!")
+
 	video := models.Video{
 		UID: uid,
 
@@ -47,6 +52,8 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 
 		State: 0, // 未审查
 	}
+
+	fmt.Println(video.Introduction + "!")
 
 	// 创建视频 返回结果
 	err := models.DB.Model(models.Video{}).Create(&video).Error

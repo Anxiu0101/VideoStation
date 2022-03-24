@@ -3,6 +3,7 @@ package service
 import (
 	"VideoStation/models"
 	"VideoStation/pkg/e"
+	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
@@ -82,7 +83,7 @@ func (service *UserService) Login() serializer.Response {
 	//	若返回错误不为 "未回应"，则返回 "数据库错误"
 	var user models.User
 	if err := models.DB.Where("username = ?", service.Username).Find(&user).Error; err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 验证用户密码是否正确，是则下一步，否则返回 "用户密码错误"
@@ -124,7 +125,7 @@ func (service *UserInfoService) GetUserInfo(uid int) serializer.Response {
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
 	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	return serializer.Response{
@@ -146,7 +147,7 @@ func (service *UserUpdateInfoService) UpdateUserInfo(uid int) serializer.Respons
 	//	若返回其他错误，则返回 数据库错误
 	var user models.User
 	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 更新用户资料
@@ -179,7 +180,7 @@ func (service *UserInfoService) ResetPassword(id int, newPassword string) serial
 	var user models.User
 	err := models.DB.Where("id = ?", id).Find(&user).Error
 	if err != nil {
-		util.CheckErrorUserNoFound(err)
+		errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 重设密码

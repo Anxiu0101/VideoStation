@@ -20,5 +20,5 @@ func UploadToServer(file *multipart.FileHeader, fileSize int64) (int, string) {
 	defer out.Close()
 
 	_, err = io.Copy(out, src)
-	return 200, "Upload Success"
+	return 200, "127.0.0.1:8000/upload/" + file.Filename
 }

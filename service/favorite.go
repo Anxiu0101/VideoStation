@@ -3,8 +3,8 @@ package service
 import (
 	"VideoStation/models"
 	"VideoStation/pkg/e"
+	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
-	"VideoStation/pkg/util"
 	"VideoStation/serializer"
 )
 
@@ -13,24 +13,24 @@ import (
 // 2. 查询视频是否存在
 // 3. 在数据库中增添关系
 // 4. 返回结果
-func (service *FavoriteVideoService) FavoriteVideo() serializer.Response {
+func (service *FavoriteVideoService) FavoriteVideo(uid uint) serializer.Response {
 	code := e.Success
 
 	// 检查用户是否存在
 	var user models.User
-	if err := models.DB.Where("ID = ?", service.UID).Find(&user).Error; err != nil {
-		return util.CheckErrorUserNoFound(err)
+	if err := models.DB.Where("ID = ?", uid).Find(&user).Error; err != nil {
+		return errorCheck.CheckErrorUserNoFound(err)
 	}
 
 	// 检查视频是否存在
 	var video models.Video
 	if err := models.DB.Where("ID = ?", service.VID).Find(&video).Error; err != nil {
-		return util.CheckErrorVideoNoFound(err)
+		return errorCheck.CheckErrorVideoNoFound(err)
 	}
 
 	// 建立收藏对象，在数据库创建收藏关系
 	data := models.Favorite{
-		UID:   service.UID,
+		UID:   uid,
 		VID:   service.VID,
 		Group: service.Group,
 	}
