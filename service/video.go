@@ -3,9 +3,13 @@ package service
 import (
 	"VideoStation/models"
 	"VideoStation/pkg/e"
+	"VideoStation/pkg/errorCheck"
+	"VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
+	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"mime/multipart"
 	"net/http"
 )
@@ -29,6 +33,50 @@ type VideoService struct {
 type FavoriteVideoService struct {
 	VID   uint   `json:"vid"`
 	Group string `json:"group"`
+}
+
+func (service *VideoService) DeleteVideo(vid, uid uint) serializer.Response {
+	code := e.Success
+
+	// 查询用户，是则下一步，
+	// 	若返回 未回应，则返回 用户不存在
+	//	若返回其他错误，则返回 数据库错误
+	var user models.User
+	if err := models.DB.Where("id = ?", uid).Find(&user).Error; err != nil {
+		return errorCheck.CheckErrorUserNoFound(err)
+	}
+
+	// 查询视频和所属人，是则下一步，
+	// 	若返回 未回应，则返回 Invalid params
+	//	若返回其他错误，则返回 数据库错误
+	var video models.Video
+	if err := models.DB.Where("id = ? AND uid = ?", vid, uid).Find(&video).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			code = e.InvalidParams
+			logging.Info(err)
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		} else {
+			code = e.ErrorDatabase
+			logging.Info(err)
+
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+
+	models.DB.Delete(&video)
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   "视频已删除",
+	}
 }
 
 func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, fileSize int64) serializer.Response {

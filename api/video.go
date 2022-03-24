@@ -6,6 +6,7 @@ import (
 	"VideoStation/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/unknwon/com"
 	"mime/multipart"
 	"net/http"
 )
@@ -14,8 +15,30 @@ func GetVideo(c *gin.Context) {
 
 }
 
-func Recommend(c *gin.Context) {
+//func Recommend(c *gin.Context) {
+//
+//}
 
+// DeleteVideo 删除视频
+func DeleteVideo(c *gin.Context) {
+	var videoDeleteService service.VideoService
+	err := c.ShouldBind(&videoDeleteService)
+	if err == nil {
+		vid := com.StrTo(c.Param("vid")).MustInt()
+		claim, err := util.ParseToken(c.GetHeader("Authorization"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"code":  e.ErrorUserToken,
+				"error": "Token 解析失败",
+			})
+			return
+		}
+		res := videoDeleteService.DeleteVideo(uint(vid), claim.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.Logger().Info(err)
+	}
 }
 
 func Publish(c *gin.Context) {
