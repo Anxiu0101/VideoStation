@@ -11,13 +11,23 @@ import (
 	"net/http"
 )
 
-func GetVideo(c *gin.Context) {
+// ShowVideo 获取指定视频信息
+func ShowVideo(c *gin.Context) {
+	var ShowVideoService service.VideoShowService
+	err := c.ShouldBind(&ShowVideoService)
+	if err == nil {
+		vid := com.StrTo(c.Param("vid")).MustInt()
+
+	}
+}
+
+func Recommend(c *gin.Context) {
 
 }
 
-//func Recommend(c *gin.Context) {
-//
-//}
+func DailyRank(c *gin.Context) {
+
+}
 
 // DeleteVideo 删除视频
 func DeleteVideo(c *gin.Context) {

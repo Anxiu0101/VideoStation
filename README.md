@@ -105,3 +105,4 @@ West2 Assignment 4
     - 文件重名问题
 - favorite 功能不依赖 Interactive 结构体而是有自己的结构体，未并入
 - Upload 不能解析 introduction 字段，问题未排查，从传入时就有问题。
+- Like and Favorite 数据收集是，gorm count 返回的类型是 int64，被我强转了，这个问题需要解决

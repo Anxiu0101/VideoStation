@@ -31,13 +31,13 @@ func InitRouter() *gin.Engine {
 		}
 
 		// 用户其他操作
-		loggedUserApi := userApi.Group("/")
+		loggedUserApi := userApi.Group("/user")
 		loggedUserApi.Use(middleware.JWT())
 		{
-			loggedUserApi.GET("/user/:id/info", api.ShowUserInfo)
-			loggedUserApi.POST("/user/:id/info", api.UpdateUserInfo)
-			loggedUserApi.POST("/user/:id/avatars", api.UploadFile)
-			loggedUserApi.POST("/user/:id/password", api.ResetPassword)
+			loggedUserApi.GET("/:id/info", api.ShowUserInfo)
+			loggedUserApi.POST("/:id/info", api.UpdateUserInfo)
+			loggedUserApi.POST("/:id/avatars", api.UploadFile)
+			loggedUserApi.POST("/:id/password", api.ResetPassword)
 		}
 	}
 
@@ -54,7 +54,9 @@ func InitRouter() *gin.Engine {
 		// 视频接口
 		videoApi := apiv1.Group("/")
 		{
-			videoApi.GET("/video/:vid", api.GetVideo)
+			videoApi.GET("/videos", api.Recommend)
+			videoApi.GET("/videos/rank", api.DailyRank)
+			videoApi.GET("/video/:vid", api.ShowVideo)
 			videoApi.DELETE("/video/:vid", api.DeleteVideo)
 			videoApi.POST("/video/upload", api.Publish)
 			videoApi.GET("/video/:vid/favorite", api.FavoriteVideo)

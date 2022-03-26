@@ -1,6 +1,7 @@
 package service
 
 import (
+	"VideoStation/cache"
 	"VideoStation/models"
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/errorCheck"
@@ -12,6 +13,8 @@ import (
 	"gorm.io/gorm"
 	"mime/multipart"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type VideoService struct {
@@ -30,9 +33,67 @@ type VideoService struct {
 	PageNum  int `json:"page_num" form:"page_num"`
 }
 
+type VideoShowService struct {
+}
+
 type FavoriteVideoService struct {
 	VID   uint   `json:"vid"`
 	Group string `json:"group"`
+}
+
+func CollectAndLikeCount(vid string) (int, int) {
+	var like int64
+	var favorite int64
+	intVid, _ := strconv.Atoi(vid)
+	strLike, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoLikeKey(intVid)).Result()
+	strFavorite, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(intVid)).Result()
+	if strLike == "" || strFavorite == "" {
+		//like和SQL的关键词冲突了，需要写成`like`
+		models.DB.Model(&models.Interactive{}).Where("vid = ? and `like` = 1", vid).Count(&like)
+		models.DB.Model(&models.Favorite{}).Where("vid = ?", vid).Count(&favorite)
+		//写入redis，设置6小时过期
+		cache.RedisClient.Set(cache.Ctx, cache.VideoLikeKey(intVid), like, time.Hour*6)
+		cache.RedisClient.Set(cache.Ctx, cache.VideoFavoriteKey(intVid), favorite, time.Hour*6)
+		// count 放回类型为 int64，这里直接强转了，必有问题，但未处理
+		return int(like), int(favorite)
+	}
+	like32, _ := strconv.Atoi(strLike)
+	favorite32, _ := strconv.Atoi(strFavorite)
+	return like32, int(favorite32)
+}
+
+func (service *VideoShowService) Show(vid uint) serializer.Response {
+	code := e.Success
+
+	var video models.Video
+	err := models.DB.Model(&models.Video{}).
+		Preload("User").
+		Where("id = ? AND State = 1", vid).
+		First(&video).Error
+
+	if err != nil {
+		code = e.InvalidParams
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "找不到此视频, 或视频未通过审核",
+		}
+	}
+
+	// 缓存点击数
+	strClicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(int(vid))).Result()
+	if strClicks == "" {
+		cache.RedisClient.RPush(cache.Ctx, cache.ClicksVideoList, vid)
+		cache.RedisClient.Set(cache.Ctx, cache.VideoClicksKey(int(vid)), video.Clicks, time.Hour*25)
+	}
+
+	cache.RedisClient.Incr(cache.Ctx, cache.VideoClicksKey(int(vid)))
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   "",
+	}
 }
 
 func (service *VideoService) DeleteVideo(vid, uid uint) serializer.Response {
@@ -116,30 +177,3 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 		Data:   "视频发布成功，待审核",
 	}
 }
-
-//func FilesController(c *gin.Context) {
-//	file, err := c.FormFile("raw")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	exe, err := os.Executable()
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	dir := filepath.Dir(exe)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	filename := uuid.New().String()
-//	uploads := filepath.Join(dir, "uploads")
-//	err = os.MkdirAll(uploads, os.ModePerm)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	fullpath := path.Join("uploads", filename+filepath.Ext(file.Filename))
-//	fileErr := c.SaveUploadedFile(file, filepath.Join(dir, fullpath))
-//	if fileErr != nil {
-//		log.Fatal(fileErr)
-//	}
-//	c.JSON(http.StatusOK, gin.H{"url": "/" + fullpath})
-//}
