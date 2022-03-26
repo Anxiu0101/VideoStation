@@ -17,7 +17,12 @@ func ShowVideo(c *gin.Context) {
 	err := c.ShouldBind(&ShowVideoService)
 	if err == nil {
 		vid := com.StrTo(c.Param("vid")).MustInt()
-
+		res := ShowVideoService.Show(vid)
+		c.JSON(http.StatusOK, res)
+		return
+	} else {
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.Logger().Info(err)
 	}
 }
 
@@ -100,10 +105,10 @@ func UploadFile(c *gin.Context) {
 
 	address := "127.0.0.1:8000" + "/upload/" + file.Filename
 
-	s := fmt.Sprintf("%s uploaded successful", file.Filename)
+	msg := fmt.Sprintf("%s uploaded successful", file.Filename)
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
-		"msg":     s,
+		"msg":     msg,
 		"data":    file,
 		"address": address,
 	})

@@ -5,14 +5,14 @@ import "gorm.io/gorm"
 type Interactive struct {
 	gorm.Model
 
-	Uid uint `gorm:"not null"`
+	UID  uint `gorm:"not null"`
+	User User `json:"user" gorm:"foreignKey:ID;references:UID;"`
 
-	Vid   uint  `gorm:"not null"`
-	Video Video `gorm:"ForeignKey:id;AssociationForeignKey:vid"`
+	VID   uint  `gorm:"not null"`
+	Video Video `gorm:"foreignKey:ID;references:VID;"`
 
-	Favorite bool `gorm:"default:false"` //是否收藏
+	Favorite bool   `gorm:"default:false"`         //是否收藏
+	Group    string `gorm:"default:'My-favorite'"` // 收藏夹
+	Like     bool   `gorm:"default:false"`         //是否点赞
 	//like和SQL的关键词冲突了，查询时需要写成`like`
-	Like bool `gorm:"default:false"` //是否点赞
 }
-
-// 还未将 favorite 功能继承进入，但 like 功能依赖于此结构体

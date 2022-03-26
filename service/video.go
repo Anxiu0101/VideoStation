@@ -6,10 +6,8 @@ import (
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
-	"VideoStation/pkg/util"
 	"VideoStation/serializer"
 	"errors"
-	"fmt"
 	"gorm.io/gorm"
 	"mime/multipart"
 	"net/http"
@@ -41,7 +39,7 @@ type FavoriteVideoService struct {
 	Group string `json:"group"`
 }
 
-func CollectAndLikeCount(vid string) (int, int) {
+func FavoriteAndLikeCount(vid string) (int, int) {
 	var like int64
 	var favorite int64
 	intVid, _ := strconv.Atoi(vid)
@@ -49,8 +47,8 @@ func CollectAndLikeCount(vid string) (int, int) {
 	strFavorite, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(intVid)).Result()
 	if strLike == "" || strFavorite == "" {
 		//like和SQL的关键词冲突了，需要写成`like`
-		models.DB.Model(&models.Interactive{}).Where("vid = ? and `like` = 1", vid).Count(&like)
-		models.DB.Model(&models.Favorite{}).Where("vid = ?", vid).Count(&favorite)
+		models.DB.Model(&models.Interactive{}).Where("id = ? AND `like` = 1", vid).Count(&like)
+		models.DB.Model(&models.Interactive{}).Where("id = ? AND favorite = 1", vid).Count(&favorite)
 		//写入redis，设置6小时过期
 		cache.RedisClient.Set(cache.Ctx, cache.VideoLikeKey(intVid), like, time.Hour*6)
 		cache.RedisClient.Set(cache.Ctx, cache.VideoFavoriteKey(intVid), favorite, time.Hour*6)
@@ -62,13 +60,13 @@ func CollectAndLikeCount(vid string) (int, int) {
 	return like32, int(favorite32)
 }
 
-func (service *VideoShowService) Show(vid uint) serializer.Response {
+func (service *VideoShowService) Show(vid int) serializer.Response {
 	code := e.Success
 
 	var video models.Video
 	err := models.DB.Model(&models.Video{}).
 		Preload("User").
-		Where("id = ? AND State = 1", vid).
+		Where("id = ? AND state = 1", vid).
 		First(&video).Error
 
 	if err != nil {
@@ -80,19 +78,39 @@ func (service *VideoShowService) Show(vid uint) serializer.Response {
 		}
 	}
 
-	// 缓存点击数
-	strClicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(int(vid))).Result()
-	if strClicks == "" {
-		cache.RedisClient.RPush(cache.Ctx, cache.ClicksVideoList, vid)
-		cache.RedisClient.Set(cache.Ctx, cache.VideoClicksKey(int(vid)), video.Clicks, time.Hour*25)
+	like, favorite := FavoriteAndLikeCount(string(vid))
+
+	// 收集视频数据信息
+	likeStr, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoLikeKey(vid)).Result()
+	favoriteStr, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(vid)).Result()
+	strClicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(vid)).Result()
+
+	var like64, favorite64 int64
+
+	if likeStr == "" || favoriteStr == "" {
+		models.DB.Model(models.Interactive{}).Where("v_id = ? AND `like` = 1", vid).Count(&like64)
+		models.DB.Model(models.Interactive{}).Where("v_id = ? AND favorite = 1", vid).Count(&favorite64)
+
+		cache.RedisClient.Set(cache.Ctx, cache.VideoLikeKey(vid), like64, time.Hour*6)
+		cache.RedisClient.Set(cache.Ctx, cache.VideoFavoriteKey(vid), favorite64, time.Hour*6)
 	}
 
-	cache.RedisClient.Incr(cache.Ctx, cache.VideoClicksKey(int(vid)))
+	if strClicks == "" {
+		cache.RedisClient.RPush(cache.Ctx, cache.ClicksVideoList, vid)
+		cache.RedisClient.Set(cache.Ctx, cache.VideoClicksKey(vid), video.Clicks, time.Hour*25)
+	}
+
+	cache.RedisClient.Incr(cache.Ctx, cache.VideoClicksKey(vid))
+
+	data := serializer.VideoData{
+		LikeCount:     like,
+		FavoriteCount: favorite,
+	}
 
 	return serializer.Response{
 		Status: code,
 		Msg:    e.GetMsg(code),
-		Data:   "",
+		Data:   serializer.BuildVideo(video, data),
 	}
 }
 
@@ -141,7 +159,7 @@ func (service *VideoService) DeleteVideo(vid, uid uint) serializer.Response {
 }
 
 func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, fileSize int64) serializer.Response {
-	code, info := util.UploadToServer(file, fileSize)
+	code, info := models.UploadToServer(file, fileSize)
 	if code != http.StatusOK {
 		return serializer.Response{
 			Status: code,
@@ -149,8 +167,6 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 			Error:  info,
 		}
 	}
-
-	fmt.Println(service.Introduction + "!")
 
 	video := models.Video{
 		UID: uid,
@@ -161,8 +177,6 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 
 		State: 0, // 未审查
 	}
-
-	fmt.Println(video.Introduction + "!")
 
 	// 创建视频 返回结果
 	err := models.DB.Model(models.Video{}).Create(&video).Error

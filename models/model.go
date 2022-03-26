@@ -35,6 +35,7 @@ func Setup() {
 
 	// open the database and buffer the conf
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true, // 迁移时禁用外键
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   conf.DatabaseSetting.TablePrefix, // set the prefix name of table
 			SingularTable: true,                             // use singular table by default
