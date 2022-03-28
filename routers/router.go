@@ -59,8 +59,12 @@ func InitRouter() *gin.Engine {
 			videoApi.GET("/video/:vid", api.ShowVideo)
 			videoApi.DELETE("/video/:vid", api.DeleteVideo)
 			videoApi.POST("/video/upload", api.Publish)
-			videoApi.POST("/video/:vid/favorite", api.FavoriteVideo)
-			videoApi.POST("/video/:vid/like", api.LikeVideo)
+
+			videoApi.POST("/video/:vid/favorite", api.FavoriteVideo) // 用户收藏
+			videoApi.POST("/video/:vid/like", api.LikeVideo)         // 用户点赞
+
+			videoApi.GET("/video/:vid/comments", api.GetComments)  // 查看评论
+			videoApi.POST("/video/:vid/comment", api.WriteComment) // 用户评论
 		}
 	}
 

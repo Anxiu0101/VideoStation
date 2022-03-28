@@ -9,11 +9,14 @@ import "gorm.io/gorm"
 type Comment struct {
 	gorm.Model
 
-	SenderID uint `json:"sender_id"`
+	SenderID int  `json:"sender_id"`
 	Sender   User `json:"sender" gorm:"foreignKey:SenderID"`
 
-	ReceiverID uint `json:"receiver_id"`
+	ReceiverID int  `json:"receiver_id"`
 	Receiver   User `json:"receiver" gorm:"foreignKey:ReceiverID"`
 
-	Content string `json:"content"`
+	VID   int   `json:"vid" gorm:"column:'vid'"`
+	Video Video `json:"video" gorm:"foreignKey:VID"`
+
+	Content string `json:"content" gorm:"size:255"`
 }
