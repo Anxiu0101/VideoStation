@@ -5,10 +5,10 @@ import "gorm.io/gorm"
 type Interactive struct {
 	gorm.Model
 
-	UID  uint `gorm:"not null"`
+	UID  int  `gorm:"not null"`
 	User User `json:"user" gorm:"foreignKey:ID;references:UID;"`
 
-	VID   uint  `gorm:"not null"`
+	VID   int   `gorm:"not null"`
 	Video Video `gorm:"foreignKey:ID;references:VID;"`
 
 	Favorite bool   `gorm:"default:false"`         //是否收藏

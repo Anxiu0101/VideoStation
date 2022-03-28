@@ -35,7 +35,6 @@ type VideoShowService struct {
 }
 
 type FavoriteVideoService struct {
-	VID   uint   `json:"vid"`
 	Group string `json:"group"`
 }
 
@@ -53,7 +52,6 @@ func FavoriteAndLikeCount(vid string) (int, int) {
 		cache.RedisClient.Set(cache.Ctx, cache.VideoLikeKey(intVid), like, time.Hour*6)
 		cache.RedisClient.Set(cache.Ctx, cache.VideoFavoriteKey(intVid), favorite, time.Hour*6)
 		// count 放回类型为 int64，这里直接强转了，必有问题，但未处理
-		return int(like), int(favorite)
 	}
 	like32, _ := strconv.Atoi(strLike)
 	favorite32, _ := strconv.Atoi(strFavorite)

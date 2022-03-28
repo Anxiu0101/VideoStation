@@ -13,9 +13,9 @@ func FavoriteVideo(c *gin.Context) {
 	var favoriteVideoService service.FavoriteVideoService
 
 	if err := c.ShouldBind(&favoriteVideoService); err == nil {
-		favoriteVideoService.VID = uint(com.StrTo(c.Param("id")).MustInt())
+		vid := com.StrTo(c.Param("vid")).MustInt()
 		claim, _ := util.ParseToken(c.GetHeader("Authorization"))
-		res := favoriteVideoService.FavoriteVideo(claim.ID)
+		res := favoriteVideoService.FavoriteVideo(int(claim.ID), vid)
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, ErrorResponse(err))

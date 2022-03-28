@@ -3,16 +3,15 @@ package serializer
 import "VideoStation/models"
 
 type Favorite struct {
-	ID    uint   `json:"id"`
-	UID   uint   `json:"uid"`
-	VID   uint   `json:"vid"`
+	UID   int    `json:"uid"`
+	VID   int    `json:"vid"`
 	Group string `json:"group"`
 }
 
-func BuildFavorite(favorite models.Favorite) Favorite {
+func BuildFavorite(interactive models.Interactive) Favorite {
 	return Favorite{
-		UID:   favorite.UID,
-		VID:   favorite.VID,
-		Group: favorite.Group,
+		UID:   interactive.UID,
+		VID:   interactive.VID,
+		Group: interactive.Group,
 	}
 }

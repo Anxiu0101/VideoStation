@@ -59,7 +59,7 @@ func InitRouter() *gin.Engine {
 			videoApi.GET("/video/:vid", api.ShowVideo)
 			videoApi.DELETE("/video/:vid", api.DeleteVideo)
 			videoApi.POST("/video/upload", api.Publish)
-			videoApi.GET("/video/:vid/favorite", api.FavoriteVideo)
+			videoApi.POST("/video/:vid/favorite", api.FavoriteVideo)
 			videoApi.POST("/video/:vid/like", api.LikeVideo)
 		}
 	}

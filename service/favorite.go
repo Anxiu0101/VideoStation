@@ -1,11 +1,14 @@
 package service
 
 import (
+	"VideoStation/cache"
 	"VideoStation/models"
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
 	"VideoStation/serializer"
+	"errors"
+	"gorm.io/gorm"
 )
 
 // FavoriteVideo 收藏视频
@@ -13,7 +16,7 @@ import (
 // 2. 查询视频是否存在
 // 3. 在数据库中增添关系
 // 4. 返回结果
-func (service *FavoriteVideoService) FavoriteVideo(uid uint) serializer.Response {
+func (service *FavoriteVideoService) FavoriteVideo(uid, vid int) serializer.Response {
 	code := e.Success
 
 	// 检查用户是否存在
@@ -24,24 +27,56 @@ func (service *FavoriteVideoService) FavoriteVideo(uid uint) serializer.Response
 
 	// 检查视频是否存在
 	var video models.Video
-	if err := models.DB.Where("ID = ?", service.VID).Find(&video).Error; err != nil {
+	if err := models.DB.Where("ID = ?", vid).Find(&video).Error; err != nil {
 		return errorCheck.CheckErrorVideoNoFound(err)
 	}
 
-	// 建立收藏对象，在数据库创建收藏关系
-	data := models.Favorite{
-		UID:   uid,
-		VID:   service.VID,
-		Group: service.Group,
-	}
-	if err := models.DB.Create(&data).Error; err != nil {
-		logging.Info(err)
-		code = e.Error
+	// 检查收藏关系是否已存在
+	var data models.Interactive
+	err := models.DB.Model(&models.Interactive{}).Where("v_id = ? AND uid = ?", vid, uid).First(&data).Error
+	// 用户已收藏该视频，且收藏组未变更
+	if data.Favorite == true && data.Group == service.Group {
+		code = e.ErrorFavoriteExist
 		return serializer.Response{
 			Status: code,
-			Data:   "收藏失败",
 			Msg:    e.GetMsg(code),
+			Data:   "该视频已被收藏",
 		}
+	}
+	// 若该用户与视频未建立关系，则建立
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		data = models.Interactive{
+			VID: vid,
+			UID: uid,
+		}
+		if err := models.DB.Model(&models.Interactive{}).Create(&data); err != nil {
+			logging.Info(err)
+			code = e.ErrorDatabase
+			return serializer.Response{
+				Status: code,
+				Data:   "收藏失败",
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+
+	if service.Group == "" {
+		service.Group = "My-favorite"
+	}
+	data = models.Interactive{
+		VID:      vid,
+		UID:      uid,
+		Favorite: true,
+		Group:    service.Group,
+	}
+
+	// 更新用户与视频关系
+	models.DB.Model(models.Interactive{}).Where("uid = ? AND v_id = ?", uid, vid).Updates(&data)
+
+	strFavorite, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(vid)).Result()
+	print("strFavorite: " + strFavorite)
+	if strFavorite != "" {
+		cache.RedisClient.Incr(cache.Ctx, cache.VideoFavoriteKey(vid))
 	}
 
 	// 返回成功结果

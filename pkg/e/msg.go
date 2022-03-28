@@ -22,6 +22,7 @@ var MsgFlags = map[int]string{
 	ErrorNotExistVideo: "视频不存在",
 	ErrorUploadVideo:   "视频上传失败",
 	ErrorLikeExist:     "已点赞",
+	ErrorFavoriteExist: "已收藏",
 }
 
 func GetMsg(code int) string {

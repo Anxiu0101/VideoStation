@@ -28,4 +28,5 @@ const (
 	ErrorNotExistVideo = 60001
 	ErrorUploadVideo   = 60002
 	ErrorLikeExist     = 60003
+	ErrorFavoriteExist = 60004
 )
