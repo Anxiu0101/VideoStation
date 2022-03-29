@@ -15,7 +15,7 @@ type Comment struct {
 	ReceiverID int  `json:"receiver_id"`
 	Receiver   User `json:"receiver" gorm:"foreignKey:ReceiverID"`
 
-	VID   int   `json:"vid" gorm:"column:'vid'"`
+	VID   int   `json:"vid" gorm:"column:vid"`
 	Video Video `json:"video" gorm:"foreignKey:VID"`
 
 	Content string `json:"content" gorm:"size:255"`

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"VideoStation/conf"
 	"VideoStation/pkg/util"
 	"VideoStation/service"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 )
 
 func WriteComment(c *gin.Context) {
-	var writeCommentService service.CommentService
+	var writeCommentService service.WriteCommentService
 	if err := c.ShouldBind(&writeCommentService); err == nil {
 		vid := com.StrTo(c.Param("vid")).MustInt()
 		claim, _ := util.ParseToken(c.GetHeader("Authorization"))
@@ -22,5 +23,13 @@ func WriteComment(c *gin.Context) {
 }
 
 func GetComments(c *gin.Context) {
-
+	var showCommentsService service.ShowCommentsService
+	if err := c.ShouldBind(&showCommentsService); err == nil {
+		vid := com.StrTo(c.Param("vid")).MustInt()
+		res := showCommentsService.Show(vid, util.GetPage(c), conf.AppSetting.PageSize)
+		c.JSON(http.StatusOK, res)
+	} else {
+		util.Logger().Info(err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+	}
 }

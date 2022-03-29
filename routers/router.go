@@ -63,8 +63,14 @@ func InitRouter() *gin.Engine {
 			videoApi.POST("/video/:vid/favorite", api.FavoriteVideo) // 用户收藏
 			videoApi.POST("/video/:vid/like", api.LikeVideo)         // 用户点赞
 
+			// 评论功能
+			// 设定了一个默认用户，id为 0，当用户评论视频时，receiver id 就是 0。若用户回复某位用户的评论时，receiver id 就是被回复的用户
 			videoApi.GET("/video/:vid/comments", api.GetComments)  // 查看评论
 			videoApi.POST("/video/:vid/comment", api.WriteComment) // 用户评论
+
+			// 弹幕功能
+			videoApi.GET("/video/:vid/dammu", api.ShowDammu)  // 获取视频弹幕
+			videoApi.POST("/video/:vid/dammu", api.SendDammu) // 发送弹幕
 		}
 	}
 

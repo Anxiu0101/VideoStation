@@ -12,6 +12,6 @@ type Danmu struct {
 	SenderID uint `json:"sender_id"`
 	Sender   User `json:"sender" gorm:"foreignKey:SenderID"`
 
-	Content string `json:"content"`
+	Content string `json:"content" gorm:"size:25"`
 	Index   int    `json:"index"`
 }
