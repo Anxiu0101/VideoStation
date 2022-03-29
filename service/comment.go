@@ -7,7 +7,6 @@ import (
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
 	"errors"
-	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -43,8 +42,7 @@ func (service *WriteCommentService) Write(uid, vid int) serializer.Response {
 	}
 
 	// 创建评论
-	var data models.Comment
-	data = models.Comment{
+	data := models.Comment{
 		VID:        vid,
 		SenderID:   uid,
 		ReceiverID: service.ReceiverID,
@@ -58,8 +56,6 @@ func (service *WriteCommentService) Write(uid, vid int) serializer.Response {
 			Msg:    e.GetMsg(code),
 		}
 	}
-
-	fmt.Println("content: ", service.Content)
 
 	// 返回成功结果
 	return serializer.Response{

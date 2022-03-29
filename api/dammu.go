@@ -1,6 +1,7 @@
 package api
 
 import (
+	"VideoStation/conf"
 	"VideoStation/pkg/util"
 	"VideoStation/service"
 	"github.com/gin-gonic/gin"
@@ -9,10 +10,10 @@ import (
 )
 
 func ShowDammu(c *gin.Context) {
-	var showDammusService service.ShowDammusService
-	if err := c.ShouldBind(&showDammusService); err == nil {
+	var showDanmusService service.ShowDanmusService
+	if err := c.ShouldBind(&showDanmusService); err == nil {
 		vid := com.StrTo(c.Param("vid")).MustInt()
-		res := showDammusService.Show(vid)
+		res := showDanmusService.Show(vid, util.GetPage(c), conf.AppSetting.PageSize)
 		c.JSON(http.StatusOK, res)
 	} else {
 		util.Logger().Info(err)
@@ -21,11 +22,11 @@ func ShowDammu(c *gin.Context) {
 }
 
 func SendDammu(c *gin.Context) {
-	var sendDammuService service.SendDammuService
-	if err := c.ShouldBind(&sendDammuService); err == nil {
+	var sendDanmuService service.SendDanmuService
+	if err := c.ShouldBind(&sendDanmuService); err == nil {
 		vid := com.StrTo(c.Param("vid")).MustInt()
 		claim, _ := util.ParseToken(c.GetHeader("Authorization"))
-		res := sendDammuService.Send(vid, int(claim.ID))
+		res := sendDanmuService.Send(vid, int(claim.ID))
 		c.JSON(http.StatusOK, res)
 	} else {
 		util.Logger().Info(err)
