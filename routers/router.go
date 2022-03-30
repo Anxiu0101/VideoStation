@@ -45,6 +45,8 @@ func InitRouter() *gin.Engine {
 	adminApi := r.Group("/")
 	{
 		adminApi.POST("/admin/login", api.AdminLogin)
+		adminApi.POST("/admin/register")
+		adminApi.POST("/admin/ban", api.AdminBan)
 	}
 
 	// Api version one

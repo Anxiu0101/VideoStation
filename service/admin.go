@@ -15,6 +15,10 @@ type AdminService struct {
 	Password string `form:"password" json:"password" binding:"required,min=5,max=16" example:"Anxiu123456"`
 }
 
+type AdminBanService struct {
+	UID int `json:"uid" form:"uid"`
+}
+
 func (service *AdminService) Login() serializer.Response {
 	code := e.Success
 
@@ -54,12 +58,35 @@ func (service *AdminService) Login() serializer.Response {
 	}
 }
 
-func (service *AdminService) BanUser() serializer.Response {
+// BanUser 封禁用户
+// 1. 检查用户存在
+// 2. 设置用户状态
+// 3. 返回成功结果
+func (service *AdminBanService) BanUser() serializer.Response {
 	code := e.Success
 
+	print(service.UID)
+	if service.UID == 0 {
+		code = e.InvalidParams
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "不可以封禁默认用户",
+		}
+	}
+
 	var user models.User
-	if err := models.DB.Where("username = ?", service.Username).Find(&user).Error; err != nil {
-		errorCheck.CheckErrorUserNoFound(err)
+	if err := models.DB.Where("id = ?", service.UID).Find(&user).Error; err != nil {
+		return errorCheck.CheckErrorUserNoFound(err)
+	}
+
+	if err := models.DB.Model(models.User{}).Where("id = ?", service.UID).Update("State", 1).Error; err != nil {
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "封禁失败",
+		}
 	}
 
 	// 返回成功结果

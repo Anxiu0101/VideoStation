@@ -10,6 +10,7 @@ var MsgFlags = map[int]string{
 	ErrorFailEncryption:      "加密失败",
 	ErrorPasswordFailCompare: "用户密码错误",
 	ErrorNewPasswordNull:     "新密码为空",
+	ErrorUserBaned:           "用户已被管理员封禁",
 
 	ErrorUserCheckTokenFail:    "Token 鉴权失败",
 	ErrorUserCheckTokenTimeout: "Token 已超时",

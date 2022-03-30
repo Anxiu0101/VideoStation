@@ -19,7 +19,7 @@ type User struct {
 	Email  string `json:"email" gorm:"size:25;not null;index"`
 
 	//账户信息
-	State int `json:"state"`
+	State int `json:"state" gorm:"default:0;size:5;comment:'0为正常.1为封禁'"`
 }
 
 const (

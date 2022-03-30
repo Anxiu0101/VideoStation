@@ -12,6 +12,7 @@ const (
 	ErrorFailEncryption      = 10003
 	ErrorPasswordFailCompare = 10004
 	ErrorNewPasswordNull     = 10005
+	ErrorUserBaned           = 10006
 
 	// token 错误
 	ErrorUserCheckTokenFail    = 30001 //token 错误

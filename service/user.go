@@ -86,6 +86,16 @@ func (service *UserService) Login() serializer.Response {
 		errorCheck.CheckErrorUserNoFound(err)
 	}
 
+	var state int
+	models.DB.Model(models.User{}).Select("state").Where("username = ?", service.Username).First(&state)
+	if state != 0 {
+		code = e.ErrorUserBaned
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
 	// 验证用户密码是否正确，是则下一步，否则返回 "用户密码错误"
 	if !user.CheckPassword(service.Password) {
 		code = e.ErrorPasswordFailCompare

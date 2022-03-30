@@ -4,6 +4,7 @@ import (
 	"VideoStation/pkg/util"
 	"VideoStation/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func AdminLogin(c *gin.Context) {
@@ -16,5 +17,20 @@ func AdminLogin(c *gin.Context) {
 	} else {
 		c.JSON(400, ErrorResponse(err))
 		util.Logger().Info(err)
+	}
+}
+
+func AdminRegister(c *gin.Context) {
+
+}
+
+func AdminBan(c *gin.Context) {
+	var adminBanService service.AdminBanService
+	if err := c.ShouldBind(&adminBanService); err == nil {
+		res := adminBanService.BanUser()
+		c.JSON(http.StatusOK, res)
+	} else {
+		util.Logger().Info(err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 }
