@@ -7,6 +7,8 @@ import (
 	"VideoStation/pkg/logging"
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
+	"errors"
+	"gorm.io/gorm"
 )
 
 // AdminService 管理员服务
@@ -17,6 +19,14 @@ type AdminService struct {
 
 type AdminBanService struct {
 	UID int `json:"uid" form:"uid"`
+}
+
+type AdminVerifyService struct {
+	State int `json:"state" form:"state"`
+	VID   int `json:"vid" form:"vid"`
+}
+
+type AdminVerifyListService struct {
 }
 
 func (service *AdminService) Login() serializer.Response {
@@ -94,5 +104,86 @@ func (service *AdminBanService) BanUser() serializer.Response {
 		Status: code,
 		Data:   "The User is baned now",
 		Msg:    e.GetMsg(code),
+	}
+}
+
+// Verify 视频审核
+// 1. 查询视频存在且为被审核
+// 2. 更新视频状态
+// 3. 返回成功结果
+func (service *AdminVerifyService) Verify() serializer.Response {
+	code := e.Success
+
+	if service.State == 0 || service.VID == 0 {
+		code = e.InvalidParams
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "传入了空值，参数错误",
+		}
+	}
+
+	// 没做处理，当视频存在但是已被其他管理员审核通过时，返回状态是视频不存在
+	var video models.Video
+	if err := models.DB.Where("id = ? AND State = 0", service.VID).Find(&video).Error; err != nil {
+		return errorCheck.CheckErrorVideoNoFound(err)
+	}
+
+	// 更新字段
+	if err := models.DB.Model(&video).Update("State", service.State).Error; err != nil {
+		code := e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "视频状态更新失败",
+		}
+	}
+
+	// 返回成功结果
+	return serializer.Response{
+		Status: code,
+		Data:   "视频审核通过成功",
+		Msg:    e.GetMsg(code),
+	}
+}
+
+// GetList 获取待审核视频列表
+// 1. 获取总数
+// 2. 获取所有字段 State 值为 0 的视频
+// 3. 返回成功结果
+func (service *AdminVerifyListService) GetList(pageNum, pageSize int) serializer.Response {
+	code := e.Success
+
+	var count int64
+	if err := models.DB.Model(models.Video{}).Where("State = 0").Count(&count).Error; err != nil {
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "获取待审核视频数失败",
+		}
+	}
+
+	var videos []models.Video
+	if err := models.DB.Model(models.Video{}).Preload("User").Offset(pageNum).Limit(pageSize).Find(&videos).Error; err != nil {
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "获取待审核视频列表失败",
+		}
+	} else if errors.Is(err, gorm.ErrRecordNotFound) {
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "No video is waiting verify",
+		}
+	}
+
+	// 返回成功结果
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildListResponse(videos, uint(count)),
 	}
 }
