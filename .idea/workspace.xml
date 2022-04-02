@@ -4,15 +4,26 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc261820-987c-434c-a83b-f1cf21db1e20" name="Changes" comment="[feat] add serializer to project, store Ciphertext in database">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/markdown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/markdown.xml" afterDir="false" />
+    <list default="true" id="cc261820-987c-434c-a83b-f1cf21db1e20" name="Changes" comment="[feat] admin verify service and api">
+      <change afterPath="$PROJECT_DIR$/pkg/util/cron.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serializer/admin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/VideoStation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VideoStation.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/admin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/app.ini" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/setting.go" beforeDir="false" afterPath="$PROJECT_DIR$/conf/setting.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/e/code.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/e/code.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/e/msg.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/e/msg.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/util/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/util/jwt.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/admin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/interactive.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/interactive.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/migration.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/migration.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/admin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/favorite.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/favorite.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/like.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/like.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/video.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +37,23 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file://$PROJECT_DIR$/../../Go" />
+  <component name="GOROOT" url="file://D:/Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://D:/Go/bin/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -45,6 +67,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
@@ -54,17 +77,28 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="configurable..is.expanded" value="false" />
     <property name="configurable.GoLibrariesConfigurable.is.expanded" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="go.format.on.save.advertiser.fired" value="true" />
     <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
     <property name="go.watchers.conflict.with.on.save.actions.check.performed" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../3/CampingNow" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.stylelint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.stylelint" value="" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="Settings.Markdown" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Desktop\West2Go\4\VedioStation\pkg\errorCheck" />
+      <recent name="E:\Desktop\West2Go\4\VedioStation\pkg\e" />
+      <recent name="E:\Desktop\West2Go\4\VedioStation\test" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
@@ -74,6 +108,15 @@
       <package value="VideoStation" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build VideoStation" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="VideoStation" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="VideoStation" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/main.go" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
@@ -86,6 +129,11 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build VideoStation" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -103,10 +151,33 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[docs] write the README.md" />
-    <MESSAGE value="[feat] add log" />
-    <MESSAGE value="[feat] add serializer to project, store Ciphertext in database" />
-    <option name="LAST_COMMIT_MESSAGE" value="[feat] add serializer to project, store Ciphertext in database" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="[fix] fix Login Query fail problem, finished the test of Login and Register" />
+    <MESSAGE value="[doc] add xblog as project record, contains those fixed bugs and how to solve it. Will remove when the project need to update as West2 Assignment." />
+    <MESSAGE value="[doc] add postman auto doc address in README.md" />
+    <MESSAGE value="[feat] qrcode generate util" />
+    <MESSAGE value="[feat] migration set" />
+    <MESSAGE value="[feat] favorite video api" />
+    <MESSAGE value="[doc] update the README" />
+    <MESSAGE value="[feat] publish video" />
+    <MESSAGE value="[feat] fix upload api" />
+    <MESSAGE value="[feat] fix user info api" />
+    <MESSAGE value="[feat] fix user service UserInfo api" />
+    <MESSAGE value="[feat] like api and service" />
+    <MESSAGE value="[feat] interactive struct and fix like function cache" />
+    <MESSAGE value="[feat] upload video and file api" />
+    <MESSAGE value="[feat] upload video service" />
+    <MESSAGE value="[feat] delete video service and api" />
+    <MESSAGE value="[feat] favorite and like count api" />
+    <MESSAGE value="[feat] Show api" />
+    <MESSAGE value="[feat] Show video service" />
+    <MESSAGE value="[feat] fix like and favorite service" />
+    <MESSAGE value="[feat] write comment service and api" />
+    <MESSAGE value="[feat] show comments service and dammu apis" />
+    <MESSAGE value="[feat] danmu service" />
+    <MESSAGE value="[feat] admin baned service and api" />
+    <MESSAGE value="[feat] admin verify service and api" />
+    <option name="LAST_COMMIT_MESSAGE" value="[feat] admin verify service and api" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
