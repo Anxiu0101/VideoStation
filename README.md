@@ -136,5 +136,10 @@ Show video 这个接口可以分为两个部分，
 
 现在的问题是，interactive 表创建失效，需要寻找几个模型的关系，但是这个问题只要关注 gorm 语句和模型的代码即可。
 
+## 主要依赖
+
+```shell
+$ go get github.com/robfig/cron/v3@v3.0.0
+```
 
 

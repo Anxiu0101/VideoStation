@@ -8,7 +8,7 @@ type Interactive struct {
 	UID  int  `gorm:"not null"`
 	User User `json:"user" gorm:"foreignKey:ID;references:UID;"`
 
-	VID   int   `gorm:"not null"`
+	VID   int   `gorm:"not null;column:vid"`
 	Video Video `gorm:"foreignKey:ID;references:VID;"`
 
 	Favorite bool   `gorm:"default:false"`         //是否收藏

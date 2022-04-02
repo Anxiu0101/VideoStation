@@ -42,13 +42,18 @@ func InitRouter() *gin.Engine {
 	}
 
 	// 管理员操作
-	adminApi := r.Group("/")
+	adminApi := r.Group("/admin")
 	{
-		adminApi.POST("/admin/login", api.AdminLogin)
-		adminApi.POST("/admin/register")
-		adminApi.POST("/admin/ban", api.AdminBan)
-		adminApi.POST("/admin/verify", api.AdminVideoVerify)
-		adminApi.GET("/admin/verify/list", api.AdminVerifyList)
+		adminApi.POST("/login", api.AdminLogin)
+		adminApi.POST("/register", api.AdminRegister)
+		adminOperaApi := adminApi.Group("/")
+		// bug! admin function can use without JWT token
+		adminOperaApi.Use(middleware.JWT())
+		{
+			adminOperaApi.POST("/ban", api.AdminBan)
+			adminOperaApi.POST("/verify", api.AdminVideoVerify)
+			adminOperaApi.GET("/verify/list", api.AdminVerifyList)
+		}
 	}
 
 	// Api version one

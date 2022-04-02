@@ -36,7 +36,7 @@ func (service *VideoLikeService) LikeVideo(vid int, uid int) serializer.Response
 
 	// 从数据库中查询点赞关系
 	var data models.Interactive
-	err := models.DB.Model(&models.Interactive{}).Where("v_id = ? AND uid = ?", vid, uid).First(&data).Error
+	err := models.DB.Model(&models.Interactive{}).Where("vid = ? AND uid = ?", vid, uid).First(&data).Error
 	// 用户已为此视频点赞
 	if data.Like == true {
 		code = e.ErrorLikeExist
@@ -55,7 +55,7 @@ func (service *VideoLikeService) LikeVideo(vid int, uid int) serializer.Response
 		models.DB.Model(&models.Interactive{}).Create(&data)
 	}
 	// 更新用户与视频关系
-	models.DB.Model(&models.Interactive{}).Where("uid = ? AND v_id = ?", uid, vid).Update("like", true)
+	models.DB.Model(&models.Interactive{}).Where("uid = ? AND vid = ?", uid, vid).Update("like", true)
 
 	// 将点赞写入缓存
 	strLike, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoLikeKey(vid)).Result()

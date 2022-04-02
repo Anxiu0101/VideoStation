@@ -9,8 +9,9 @@ import (
 )
 
 type App struct {
-	PageSize  int
-	JwtSecret string
+	PageSize     int
+	JwtSecret    string
+	PassWordCost int
 
 	ImagePrefixUrl string
 	ImageSavePath  string

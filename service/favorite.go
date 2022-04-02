@@ -33,7 +33,7 @@ func (service *FavoriteVideoService) FavoriteVideo(uid, vid int) serializer.Resp
 
 	// 检查收藏关系是否已存在
 	var data models.Interactive
-	err := models.DB.Model(&models.Interactive{}).Where("v_id = ? AND uid = ?", vid, uid).First(&data).Error
+	err := models.DB.Model(&models.Interactive{}).Where("vid = ? AND uid = ?", vid, uid).First(&data).Error
 	// 用户已收藏该视频，且收藏组未变更
 	if data.Favorite == true && data.Group == service.Group {
 		code = e.ErrorFavoriteExist
@@ -71,7 +71,7 @@ func (service *FavoriteVideoService) FavoriteVideo(uid, vid int) serializer.Resp
 	}
 
 	// 更新用户与视频关系
-	models.DB.Model(models.Interactive{}).Where("uid = ? AND v_id = ?", uid, vid).Updates(&data)
+	models.DB.Model(models.Interactive{}).Where("uid = ? AND vid = ?", uid, vid).Updates(&data)
 
 	strFavorite, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(vid)).Result()
 	print("strFavorite: " + strFavorite)

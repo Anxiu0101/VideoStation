@@ -6,6 +6,7 @@ import (
 	"VideoStation/pkg/e"
 	"VideoStation/pkg/errorCheck"
 	"VideoStation/pkg/logging"
+	"VideoStation/pkg/util"
 	"VideoStation/serializer"
 	"errors"
 	"gorm.io/gorm"
@@ -81,17 +82,17 @@ func (service *VideoShowService) Show(vid int) serializer.Response {
 	// 收集视频数据信息
 	likeStr, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoLikeKey(vid)).Result()
 	favoriteStr, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoFavoriteKey(vid)).Result()
-	strClicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(vid)).Result()
 
 	var like64, favorite64 int64
-
 	if likeStr == "" || favoriteStr == "" {
-		models.DB.Model(models.Interactive{}).Where("v_id = ? AND `like` = 1", vid).Count(&like64)
-		models.DB.Model(models.Interactive{}).Where("v_id = ? AND favorite = 1", vid).Count(&favorite64)
+		models.DB.Model(models.Interactive{}).Where("vid = ? AND `like` = 1", vid).Count(&like64)
+		models.DB.Model(models.Interactive{}).Where("vid = ? AND favorite = 1", vid).Count(&favorite64)
 
 		cache.RedisClient.Set(cache.Ctx, cache.VideoLikeKey(vid), like64, time.Hour*6)
 		cache.RedisClient.Set(cache.Ctx, cache.VideoFavoriteKey(vid), favorite64, time.Hour*6)
 	}
+
+	strClicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(vid)).Result()
 
 	if strClicks == "" {
 		cache.RedisClient.RPush(cache.Ctx, cache.ClicksVideoList, vid)
@@ -188,4 +189,26 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 		Msg:    e.GetMsg(code),
 		Data:   "视频发布成功，待审核",
 	}
+}
+
+func ClicksStoreInDB() {
+	util.Logger().Info("[info]", " Clicks are stored in the database")
+	var vid int          //视频id
+	var key string       //redis的key
+	var clicks int       //点击量数字
+	var strClicks string //字符串格式
+	videos := cache.RedisClient.LRange(cache.Ctx, cache.ClicksVideoList, 0, -1).Val()
+	for _, i := range videos {
+		vid, _ = strconv.Atoi(i)
+		key = cache.VideoClicksKey(vid)
+		strClicks, _ = cache.RedisClient.Get(cache.Ctx, key).Result()
+		clicks, _ = strconv.Atoi(strClicks)
+		//删除redis数据
+		cache.RedisClient.Del(cache.Ctx, key)
+		//写入数据库
+		models.DB.Model(&models.Video{}).Where("id = ?", vid).Update("clicks", clicks)
+	}
+	//删除list
+	cache.RedisClient.Del(cache.Ctx, cache.ClicksVideoList)
+	util.Logger().Info("[info]", " Click volume storage completed")
 }

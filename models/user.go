@@ -1,6 +1,7 @@
 package models
 
 import (
+	"VideoStation/conf"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -22,13 +23,9 @@ type User struct {
 	State int `json:"state" gorm:"default:0;size:5;comment:'0为正常.1为封禁'"`
 }
 
-const (
-	PassWordCost = 12 //密码加密难度
-)
-
 //SetPassword 设置密码
 func (user *User) SetPassword(password string) error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PassWordCost)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), conf.AppSetting.PassWordCost)
 	if err != nil {
 		return err
 	}
