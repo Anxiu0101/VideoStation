@@ -38,6 +38,8 @@ func InitRouter() *gin.Engine {
 			loggedUserApi.POST("/:id/info", api.UpdateUserInfo)
 			loggedUserApi.POST("/:id/avatars", api.UploadFile)
 			loggedUserApi.POST("/:id/password", api.ResetPassword)
+			loggedUserApi.GET("/:id/history", api.GetHistory)
+			loggedUserApi.POST("/:id/history", api.SetHistory)
 		}
 	}
 
@@ -63,8 +65,8 @@ func InitRouter() *gin.Engine {
 		// 视频接口
 		videoApi := apiv1.Group("/")
 		{
-			videoApi.GET("/videos", api.Recommend)
-			videoApi.GET("/videos/rank", api.DailyRank)
+			videoApi.GET("/videos", api.Rank)
+			//videoApi.GET("/videos/rank", api.DailyRank)
 			videoApi.GET("/video/:vid", api.ShowVideo)
 			videoApi.DELETE("/video/:vid", api.DeleteVideo)
 			videoApi.POST("/video/upload", api.Publish)

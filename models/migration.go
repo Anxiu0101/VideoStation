@@ -8,5 +8,6 @@ func migration() {
 			&Video{},
 			&Comment{},
 			&Danmu{},
+			&History{},
 			&Interactive{})
 }

@@ -168,7 +168,7 @@ func (service *AdminVerifyService) Verify() serializer.Response {
 	}
 
 	// 更新字段
-	if err := models.DB.Model(&video).Update("State", service.State).Error; err != nil {
+	if err := models.DB.Model(&video).Where("id = ?", service.VID).Update("State", service.State).Error; err != nil {
 		code := e.ErrorDatabase
 		return serializer.Response{
 			Status: code,

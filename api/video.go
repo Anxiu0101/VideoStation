@@ -26,13 +26,27 @@ func ShowVideo(c *gin.Context) {
 	}
 }
 
-func Recommend(c *gin.Context) {
-
+func Rank(c *gin.Context) {
+	var videoRecommend service.VideoShowService
+	if err := c.ShouldBind(&videoRecommend); err == nil {
+		res := videoRecommend.Rank()
+		c.JSON(http.StatusOK, res)
+	} else {
+		util.Logger().Info(err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+	}
 }
 
-func DailyRank(c *gin.Context) {
-
-}
+//func DailyRank(c *gin.Context) {
+//	var service service.DailyRankService
+//	if err := c.ShouldBind(&service); err == nil {
+//		res := service.Rank()
+//		c.JSON(http.StatusOK, res)
+//	} else {
+//		util.Logger().Info(err)
+//		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+//	}
+//}
 
 // DeleteVideo 删除视频
 func DeleteVideo(c *gin.Context) {
@@ -70,8 +84,7 @@ func Publish(c *gin.Context) {
 	}
 	//c.ShouldBind(&videoUploadService)
 	videoUploadService.Title = c.Query("title")
-	videoUploadService.Introduction = c.Query("introduction'")
-	fmt.Println(videoUploadService.Introduction + "!")
+	videoUploadService.Introduction = c.Query("introduction")
 	claim, err := util.ParseToken(c.GetHeader("Authorization"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -84,6 +97,7 @@ func Publish(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// UploadFile 已弃用
 func UploadFile(c *gin.Context) {
 	code := e.Success
 	file, error := c.FormFile("file")

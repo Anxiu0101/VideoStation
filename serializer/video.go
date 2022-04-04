@@ -42,3 +42,31 @@ func BuildVideo(item models.Video, data VideoData) Video {
 		Clicks: clicks,
 	}
 }
+
+// BuildVideosSingle 序列化视频
+func BuildVideosSingle(item models.Video) Video {
+	clicks, _ := cache.RedisClient.Get(cache.Ctx, cache.VideoClicksKey(int(item.ID))).Result()
+	return Video{
+		ID:           item.ID,
+		Title:        item.Title,
+		Video:        item.Video,
+		Introduction: item.Introduction,
+		CreateAt:     item.CreatedAt,
+		Up: User{
+			ID:       item.User.ID,
+			Username: item.User.Username,
+			Avatars:  item.User.Avatars,
+		},
+		Clicks: clicks,
+	}
+
+}
+
+// BuildVideos 序列化视频列表
+func BuildVideos(items []models.Video) (videos []Video) {
+	for _, item := range items {
+		video := BuildVideosSingle(item)
+		videos = append(videos, video)
+	}
+	return videos
+}

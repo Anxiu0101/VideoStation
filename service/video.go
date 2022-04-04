@@ -9,10 +9,13 @@ import (
 	"VideoStation/pkg/util"
 	"VideoStation/serializer"
 	"errors"
+	"fmt"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 	"mime/multipart"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -37,6 +40,10 @@ type VideoShowService struct {
 
 type FavoriteVideoService struct {
 	Group string `json:"group"`
+}
+
+// DailyRankService 每日点击排行服务
+type DailyRankService struct {
 }
 
 func FavoriteAndLikeCount(vid string) (int, int) {
@@ -167,6 +174,14 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 		}
 	}
 
+	if uid == 0 {
+		code = e.InvalidParams
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
 	video := models.Video{
 		UID: uid,
 
@@ -191,6 +206,61 @@ func (service *VideoService) UploadVideo(uid uint, file *multipart.FileHeader, f
 	}
 }
 
+// RankDaily 弃用
+func (service *DailyRankService) RankDaily() serializer.Response {
+	code := e.Success
+
+	var videos []models.Video
+
+	vids, err := cache.RedisClient.ZRevRange(cache.Ctx, cache.ClicksVideoList, 0, 9).Result()
+	if err != nil {
+		util.Logger().Info(err)
+		return serializer.Response{
+			Status: e.ErrorDatabase,
+			Msg:    "数据库错误",
+		}
+	}
+
+	print(vids)
+
+	if len(vids) > 1 {
+		order := fmt.Sprintf("FIELD(id, %s)", strings.Join(vids, ","))
+		err := models.DB.Where("id in (?)", vids).Order(order).Find(&videos).Error
+		if err != nil {
+			return serializer.Response{
+				Status: 50000,
+				Msg:    "数据库连接错误",
+				Error:  err.Error(),
+			}
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildVideos(videos),
+	}
+}
+
+func (service *VideoShowService) Rank() serializer.Response {
+	code := e.Success
+
+	var videos []models.Video
+	var count int64
+	models.DB.Model(&models.Video{}).Preload("User").Where("state = 1").Order("clicks desc").
+		Find(&videos).Count(&count)
+	for i := 0; int64(i) < count; i++ {
+		tmp := strconv.Itoa(videos[i].Clicks)
+		click, _ := strconv.Atoi(GetClicksFromRedis(cache.RedisClient, int(videos[i].ID), tmp))
+		videos[i].Clicks = click
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildVideos(videos),
+	}
+}
+
 func ClicksStoreInDB() {
 	util.Logger().Info("[info]", " Clicks are stored in the database")
 	var vid int          //视频id
@@ -211,4 +281,16 @@ func ClicksStoreInDB() {
 	//删除list
 	cache.RedisClient.Del(cache.Ctx, cache.ClicksVideoList)
 	util.Logger().Info("[info]", " Click volume storage completed")
+}
+
+func GetClicksFromRedis(redis *redis.Client, vid int, dbClicks string) string {
+	strClicks, _ := redis.Get(cache.Ctx, cache.VideoClicksKey(vid)).Result()
+	if len(strClicks) == 0 {
+		//将视频ID存入点击量列表
+		redis.RPush(cache.Ctx, cache.ClicksVideoList, vid)
+		//将点击量存入redis并设置25小时，防止数据当天过期
+		redis.Set(cache.Ctx, cache.VideoClicksKey(vid), dbClicks, time.Hour*25)
+		return dbClicks
+	}
+	return strClicks
 }
