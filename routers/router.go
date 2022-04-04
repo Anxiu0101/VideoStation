@@ -40,6 +40,7 @@ func InitRouter() *gin.Engine {
 			loggedUserApi.POST("/:id/password", api.ResetPassword)
 			loggedUserApi.GET("/:id/history", api.GetHistory)
 			loggedUserApi.POST("/:id/history", api.SetHistory)
+			loggedUserApi.GET("/search", api.Search)
 		}
 	}
 
